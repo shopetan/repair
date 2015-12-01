@@ -10,7 +10,7 @@ var mongoose   = require('mongoose');
 mongoose.connect('mongodb://localhost/repair');
 
 // モデルの宣言
-var User       = require('./models/user');
+var User       = require('./app/models/user');
 
 
 // POSTでdataを受け取るための記述
