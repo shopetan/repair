@@ -209,8 +209,8 @@ router.route('/supports')
             var support = new Support();
             
             // 推奨環境設定の情報を取得する．
-            support.name = req.body.os;
-            support.type = req.body.browser;
+            support.os = req.body.os;
+            support.browser = req.body.browser;
             
             // 設定をセーブする．
             support.save(function(err) {
