@@ -116,15 +116,15 @@ router.route('/edit_programs')
 // プログラムの作成 (POST http://localhost:3000/api/edit_programs)
     .post(function(req, res) {
 
-        // 新しいユーザのモデルを作成する．
+        // 新しいプログラムのモデルを作成する．
         var edit_program = new EditProgram();
 
-        // ユーザの各カラムの情報を取得する．
+        // プログラムの各カラムの情報を取得する．
         edit_program.name = req.body.name;
         edit_program.type = req.body.type;
         edit_program.source = req.body.source;
         
-        // ユーザ情報をセーブする．
+        // プログラム情報をセーブする．
         edit_program.save(function(err) {
             if (err)
                 res.send(err);
@@ -146,21 +146,21 @@ router.route('/edit_programs')
 // ----------------------------------------------------
 router.route('/edit_programs/:edit_program_id')
 
-// 1人のユーザの情報を取得 (GET http://localhost:3000/api/edit_programs/:edit_program_id)
+// 1つのプログラムの情報を取得 (GET http://localhost:3000/api/edit_programs/:edit_program_id)
     .get(function(req, res) {
-        //user_idが一致するデータを探す．
+        //edit_program_idが一致するデータを探す．
         EditProgram.findById(req.params.edit_program_id, function(err, edit_program) {
             if (err)
                 res.send(err);
             res.json(edit_program);
         });
     })
-// 1人のユーザの情報を更新 (PUT http://localhost:3000/api/edit_programs/:edit_program_id)
+// 1つのプログラムの情報を更新 (PUT http://localhost:3000/api/edit_programs/:edit_program_id)
     .put(function(req, res) {
         User.findById(req.params.edit_program_id, function(err, edit_program) {
             if (err)
                 res.send(err);
-            // ユーザの各カラムの情報を更新する．
+            // プログラムの各カラムの情報を更新する．
             edit_program.name = req.body.name;
             edit_program.type = req.body.type;
             edit_program.source = req.body.source;
@@ -173,7 +173,7 @@ router.route('/edit_programs/:edit_program_id')
         });
     })
 
-// 1人のユーザの情報を削除 (DELETE http://localhost:3000/api/edit_programs/:edit_program_id)
+// 1つのプログラムの情報を削除 (DELETE http://localhost:3000/api/edit_programs/:edit_program_id)
     .delete(function(req, res) {
         EditProgram.remove({
             _id: req.params.edit_program_id
@@ -222,7 +222,7 @@ router.route('/supports/:support_id')
 
 // 1つの環境情報を取得 (GET http://localhost:3000/api/supports/:support_id)
     .get(function(req, res) {
-        //user_idが一致するデータを探す．
+        //support_idが一致するデータを探す．
         Support.findById(req.params.support_id, function(err, support) {
             if (err)
                 res.send(err);
@@ -237,7 +237,7 @@ router.route('/supports/:support_id')
             // ユーザの各カラムの情報を更新する．
             support.os = req.body.os;
             support.browser = req.body.browser;
-
+            
             support.save(function(err) {
                 if (err)
                     res.send(err);
