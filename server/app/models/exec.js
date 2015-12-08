@@ -4,7 +4,7 @@ var mongoose     = require('mongoose');
 var Schema       = mongoose.Schema;
 
 var ExecSchema   = new Schema({
-    u_id: String,
+    e_id: String,
     s_id: String
 });
 

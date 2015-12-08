@@ -145,16 +145,16 @@ router.route('/edit_programs')
                     res.send(err);
                 res.json({ message: 'Edit created!' });
             });
-        })
-          // 全てのプログラム一覧を取得 (GET http://localhost:8080/api/edit_programs)
-          .get(function(req, res) {
-              EditProgram.find(function(err, edit_programs) {
-                  if (err)
-                      res.send(err);
-                  res.json(edit_programs);
-              });
-          });
-          
+        }})
+// 全てのプログラム一覧を取得 (GET http://localhost:8080/api/edit_programs)
+    .get(function(req, res) {
+        EditProgram.find(function(err, edit_programs) {
+            if (err)
+                res.send(err);
+            res.json(edit_programs);
+        });
+    });
+
 // /edit_programs/:edit_program_id というルートを作成する．
 // ----------------------------------------------------
 router.route('/edit_programs/:edit_program_id')
@@ -203,21 +203,32 @@ router.route('/supports')
 
 // 推奨環境設定の作成 (POST http://localhost:3000/api/supports)
     .post(function(req, res) {
-
-        // 推奨環境設定のモデルを作成する．
-        var support = new Support();
-
-        // 推奨環境設定の情報を取得する．
-        support.name = req.body.os;
-        support.type = req.body.browser;
-        
-        // 設定をセーブする．
-        support.save(function(err) {
-            if (err)
-                res.send(err);
-            res.json({ message: 'Support created!' });
-        });
-    })
+        if(req.query.editProgramID != null){
+            // 推奨環境設定のモデルを作成する．
+            var support = new Support();
+            
+            // 推奨環境設定の情報を取得する．
+            support.name = req.body.os;
+            support.type = req.body.browser;
+            
+            // 設定をセーブする．
+            support.save(function(err) {
+                if (err)
+                    res.send(err);
+                res.json({ message: 'Support created!' });
+            });
+            
+            // Execモデルの情報を作成，セーブする．
+            var exec = new Exec();
+            exec.s_id = support._id;
+            exec.e_id = req.query.editProgramID;
+            
+            exec.save(function(err) {
+                if (err)
+                    res.send(err);
+                res.json({ message: 'Exec created!' });
+            });
+        }})
 
 // 全ての環境設定一覧を取得 (GET http://localhost:8080/api/supports)
     .get(function(req, res) {
@@ -227,7 +238,6 @@ router.route('/supports')
             res.json(supports);
         });
     });
-
 
 // /supports/:support_id というルートを作成する．
 // ----------------------------------------------------
