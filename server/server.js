@@ -13,6 +13,8 @@ mongoose.connect('mongodb://localhost/repair');
 var User       = require('./app/models/user');
 var EditProgram       = require('./app/models/edit_program');
 var Support       = require('./app/models/support');
+var Edit = require('./app/models/edit');
+var Exec = require('./app/models/exec');
 
 
 // POSTでdataを受け取るための記述
@@ -115,33 +117,44 @@ router.route('/edit_programs')
 
 // プログラムの作成 (POST http://localhost:3000/api/edit_programs)
     .post(function(req, res) {
-
-        // 新しいプログラムのモデルを作成する．
-        var edit_program = new EditProgram();
-
-        // プログラムの各カラムの情報を取得する．
-        edit_program.name = req.body.name;
-        edit_program.type = req.body.type;
-        edit_program.source = req.body.source;
         
-        // プログラム情報をセーブする．
-        edit_program.save(function(err) {
-            if (err)
-                res.send(err);
-            res.json({ message: 'Edit_program created!' });
-        });
-    })
-
-// 全てのプログラム一覧を取得 (GET http://localhost:8080/api/edit_programs)
-    .get(function(req, res) {
-        EditProgram.find(function(err, edit_programs) {
-            if (err)
-                res.send(err);
-            res.json(edit_programs);
-        });
-    });
-
-
+        if(req.query.userID != null){
+            
+            // 新しいプログラムのモデルを作成する．
+            var edit_program = new EditProgram();
+            
+            // プログラムの各カラムの情報を取得する．
+            edit_program.name = req.body.name;
+            edit_program.type = req.body.type;
+            edit_program.source = req.body.source;
+            
+            // プログラム情報をセーブする．
+            edit_program.save(function(err) {
+                if (err)
+                    res.send(err);
+                res.json({ message: 'Edit_program created!' });
+            });
+            
+            // Editモデルの情報を作成，セーブする．
+            var edit = new Edit();
+            edit.e_id = edit_program._id;
+            edit.u_id = req.query.userID;
+            
+            edit.save(function(err) {
+                if (err)
+                    res.send(err);
+                res.json({ message: 'Edit created!' });
+            });
+        })
+          // 全てのプログラム一覧を取得 (GET http://localhost:8080/api/edit_programs)
+          .get(function(req, res) {
+              EditProgram.find(function(err, edit_programs) {
+                  if (err)
+                      res.send(err);
+                  res.json(edit_programs);
+              });
+          });
+          
 // /edit_programs/:edit_program_id というルートを作成する．
 // ----------------------------------------------------
 router.route('/edit_programs/:edit_program_id')
