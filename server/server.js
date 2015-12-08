@@ -132,7 +132,6 @@ router.route('/edit_programs')
             edit_program.save(function(err) {
                 if (err)
                     res.send(err);
-                res.json({ message: 'Edit_program created!' });
             });
             
             // Editモデルの情報を作成，セーブする．
@@ -215,7 +214,6 @@ router.route('/supports')
             support.save(function(err) {
                 if (err)
                     res.send(err);
-                res.json({ message: 'Support created!' });
             });
             
             // Execモデルの情報を作成，セーブする．
