@@ -184,6 +184,79 @@ router.route('/edit_programs/:edit_program_id')
         });
     });
 
+// /supports というルートを作成する．
+// ----------------------------------------------------
+router.route('/supports')
+
+// 推奨環境設定の作成 (POST http://localhost:3000/api/supports)
+    .post(function(req, res) {
+
+        // 推奨環境設定のモデルを作成する．
+        var support = new Support();
+
+        // 推奨環境設定の情報を取得する．
+        support.name = req.body.os;
+        support.type = req.body.browser;
+        
+        // 設定をセーブする．
+        support.save(function(err) {
+            if (err)
+                res.send(err);
+            res.json({ message: 'Support created!' });
+        });
+    })
+
+// 全ての環境設定一覧を取得 (GET http://localhost:8080/api/supports)
+    .get(function(req, res) {
+        Support.find(function(err, supports) {
+            if (err)
+                res.send(err);
+            res.json(supports);
+        });
+    });
+
+
+// /supports/:support_id というルートを作成する．
+// ----------------------------------------------------
+router.route('/supports/:support_id')
+
+// 1つの環境情報を取得 (GET http://localhost:3000/api/supports/:support_id)
+    .get(function(req, res) {
+        //user_idが一致するデータを探す．
+        Support.findById(req.params.support_id, function(err, support) {
+            if (err)
+                res.send(err);
+            res.json(support);
+        });
+    })
+// 1つの環境情報を更新 (PUT http://localhost:3000/api/supports/:support_id)
+    .put(function(req, res) {
+        User.findById(req.params.support_id, function(err, support) {
+            if (err)
+                res.send(err);
+            // ユーザの各カラムの情報を更新する．
+            support.os = req.body.os;
+            support.browser = req.body.browser;
+
+            support.save(function(err) {
+                if (err)
+                    res.send(err);
+                res.json({ message: 'support updated!' });
+            });
+        });
+    })
+
+// 1つの環境情報を削除 (DELETE http://localhost:3000/api/supports/:support_id)
+    .delete(function(req, res) {
+        Support.remove({
+            _id: req.params.support_id
+        }, function(err, support) {
+            if (err)
+                res.send(err);
+            res.json({ message: 'Successfuly deleted' });
+        });
+    });
+
 
 
 // ルーティング登録
