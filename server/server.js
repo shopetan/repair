@@ -50,7 +50,7 @@ router.route('/users')
         // ユーザの各カラムの情報を取得する．
         user.name = req.body.name;
         user.is_login = req.body.is_login;
-
+        
         // ユーザ情報をセーブする．
         user.save(function(err) {
             if (err)
@@ -135,6 +135,7 @@ router.route('/edit_programs')
             });
             
             // Editモデルの情報を作成，セーブする．
+            
             var edit = new Edit();
             edit.e_id = edit_program._id;
             edit.u_id = req.query.userID;
@@ -144,6 +145,7 @@ router.route('/edit_programs')
                     res.send(err);
                 res.json({ message: 'Edit created!' });
             });
+
         }})
 // 全てのプログラム一覧を取得 (GET http://localhost:8080/api/edit_programs)
     .get(function(req, res) {
@@ -176,7 +178,7 @@ router.route('/edit_programs/:edit_program_id')
             edit_program.name = req.body.name;
             edit_program.type = req.body.type;
             edit_program.source = req.body.source;
-
+            
             edit_program.save(function(err) {
                 if (err)
                     res.send(err);
