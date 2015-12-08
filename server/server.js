@@ -11,6 +11,8 @@ mongoose.connect('mongodb://localhost/repair');
 
 // モデルの宣言
 var User       = require('./app/models/user');
+var EditProgram       = require('./app/models/edit_program');
+var Support       = require('./app/models/support');
 
 
 // POSTでdataを受け取るための記述
@@ -105,6 +107,83 @@ router.route('/users/:user_id')
             res.json({ message: 'Successfully deleted' });
         });
     });
+
+
+// /edit_program というルートを作成する．
+// ----------------------------------------------------
+router.route('/edit_programs')
+
+// プログラムの作成 (POST http://localhost:3000/api/edit_programs)
+    .post(function(req, res) {
+
+        // 新しいユーザのモデルを作成する．
+        var edit_program = new EditProgram();
+
+        // ユーザの各カラムの情報を取得する．
+        edit_program.name = req.body.name;
+        edit_program.type = req.body.type;
+        edit_program.source = req.body.source;
+        
+        // ユーザ情報をセーブする．
+        edit_program.save(function(err) {
+            if (err)
+                res.send(err);
+            res.json({ message: 'Edit_program created!' });
+        });
+    })
+
+// 全てのプログラム一覧を取得 (GET http://localhost:8080/api/edit_programs)
+    .get(function(req, res) {
+        EditProgram.find(function(err, edit_programs) {
+            if (err)
+                res.send(err);
+            res.json(edit_programs);
+        });
+    });
+
+
+// /edit_programs/:edit_program_id というルートを作成する．
+// ----------------------------------------------------
+router.route('/edit_programs/:edit_program_id')
+
+// 1人のユーザの情報を取得 (GET http://localhost:3000/api/edit_programs/:edit_program_id)
+    .get(function(req, res) {
+        //user_idが一致するデータを探す．
+        EditProgram.findById(req.params.edit_program_id, function(err, edit_program) {
+            if (err)
+                res.send(err);
+            res.json(edit_program);
+        });
+    })
+// 1人のユーザの情報を更新 (PUT http://localhost:3000/api/edit_programs/:edit_program_id)
+    .put(function(req, res) {
+        User.findById(req.params.edit_program_id, function(err, edit_program) {
+            if (err)
+                res.send(err);
+            // ユーザの各カラムの情報を更新する．
+            edit_program.name = req.body.name;
+            edit_program.type = req.body.type;
+            edit_program.source = req.body.source;
+
+            edit_program.save(function(err) {
+                if (err)
+                    res.send(err);
+                res.json({ message: 'edit_program updated!' });
+            });
+        });
+    })
+
+// 1人のユーザの情報を削除 (DELETE http://localhost:3000/api/edit_programs/:edit_program_id)
+    .delete(function(req, res) {
+        EditProgram.remove({
+            _id: req.params.edit_program_id
+        }, function(err, edit_program) {
+            if (err)
+                res.send(err);
+            res.json({ message: 'Successfully deleted' });
+        });
+    });
+
 
 
 // ルーティング登録
