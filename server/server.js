@@ -4,17 +4,18 @@
 var express    = require('express');
 var app        = express();
 var bodyParser = require('body-parser');
+var fs         = require('fs');
 
 // DBへの接続
 var mongoose   = require('mongoose');
 mongoose.connect('mongodb://localhost/repair');
 
 // モデルの宣言
-var User       = require('./app/models/user');
+var User              = require('./app/models/user');
 var EditProgram       = require('./app/models/edit_program');
-var Support       = require('./app/models/support');
-var Edit = require('./app/models/edit');
-var Exec = require('./app/models/exec');
+var Support           = require('./app/models/support');
+var Edit              = require('./app/models/edit');
+var Exec              = require('./app/models/exec');
 
 
 // POSTでdataを受け取るための記述
@@ -50,7 +51,7 @@ router.route('/users')
         // ユーザの各カラムの情報を取得する．
         user.name = req.body.name;
         user.is_login = req.body.is_login;
-        
+
         // ユーザ情報をセーブする．
         user.save(function(err) {
             if (err)
@@ -117,29 +118,29 @@ router.route('/edit_programs')
 
 // プログラムの作成 (POST http://localhost:3000/api/edit_programs)
     .post(function(req, res) {
-        
+
         if(req.query.userID != null){
-            
+
             // 新しいプログラムのモデルを作成する．
             var edit_program = new EditProgram();
-            
+
             // プログラムの各カラムの情報を取得する．
             edit_program.name = req.body.name;
             edit_program.type = req.body.type;
             edit_program.source = req.body.source;
-            
+
             // プログラム情報をセーブする．
             edit_program.save(function(err) {
                 if (err)
                     res.send(err);
             });
-            
+
             // Editモデルの情報を作成，セーブする．
-            
+
             var edit = new Edit();
             edit.e_id = edit_program._id;
             edit.u_id = req.query.userID;
-            
+
             edit.save(function(err) {
                 if (err)
                     res.send(err);
@@ -178,7 +179,7 @@ router.route('/edit_programs/:edit_program_id')
             edit_program.name = req.body.name;
             edit_program.type = req.body.type;
             edit_program.source = req.body.source;
-            
+
             edit_program.save(function(err) {
                 if (err)
                     res.send(err);
@@ -207,22 +208,22 @@ router.route('/supports')
         if(req.query.editProgramID != null){
             // 推奨環境設定のモデルを作成する．
             var support = new Support();
-            
+
             // 推奨環境設定の情報を取得する．
             support.os = req.body.os;
             support.browser = req.body.browser;
-            
+
             // 設定をセーブする．
             support.save(function(err) {
                 if (err)
                     res.send(err);
             });
-            
+
             // Execモデルの情報を作成，セーブする．
             var exec = new Exec();
             exec.s_id = support._id;
             exec.e_id = req.query.editProgramID;
-            
+
             exec.save(function(err) {
                 if (err)
                     res.send(err);
@@ -260,7 +261,7 @@ router.route('/supports/:support_id')
             // ユーザの各カラムの情報を更新する．
             support.os = req.body.os;
             support.browser = req.body.browser;
-            
+
             support.save(function(err) {
                 if (err)
                     res.send(err);
@@ -288,3 +289,36 @@ app.use('/api', router);
 //サーバ起動
 app.listen(port);
 console.log('listen on port ' + port);
+
+
+// USE Socket.io
+
+var http = require('http');
+var view = express();
+view.use(express.static('./app/view'));
+view.listen(8081)
+
+var index = fs.readFileSync('./app/view/index.html');
+var viewServer = http.createServer(function(req, res){
+        // Send HTML headers and message
+        res.writeHead(200,{ 'Content-Type': 'text/html' });
+        res.end(index)
+    });
+
+// add start
+var socketIO = require('socket.io');
+var io = socketIO.listen(viewServer);
+viewServer.listen(8080)
+console.log("listen on port 8080");
+
+io.sockets.on('connection', function(socket) {
+    console.log("connection");
+    socket.on('message', function(data) {
+        console.log("message");
+        io.sockets.emit('message', { value: data.value });
+    });
+
+    socket.on('disconnect', function(){
+        console.log("disconnect");
+    });
+});
