@@ -291,24 +291,20 @@ app.listen(port);
 console.log('listen on port ' + port);
 
 
-// USE Socket.io
+// USE Socket.io and static page
 
 var http = require('http');
-var view = express();
-view.use(express.static('./app/view'));
-view.listen(8081)
-
-var index = fs.readFileSync('./app/view/index.html');
-var viewServer = http.createServer(function(req, res){
-        // Send HTML headers and message
-        res.writeHead(200,{ 'Content-Type': 'text/html' });
-        res.end(index)
-    });
+var viewDir = "./app/view"
+var connect = require('connect');
+var serveStatic = require('serve-static');
+var view = connect();
+view.use(serveStatic(viewDir));
+var viewServer = http.createServer(view);
+viewServer.listen(8080);
 
 // add start
 var socketIO = require('socket.io');
 var io = socketIO.listen(viewServer);
-viewServer.listen(8080)
 console.log("listen on port 8080");
 
 io.sockets.on('connection', function(socket) {
