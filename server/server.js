@@ -64,7 +64,7 @@ router.route('/users')
     .get(function(req, res) {
 
         //あるプログラムの作成者を表示する．
-        if(req.query.programName != null){
+        if(req.query.programName != null  && req.query.searchUser == "ture"){
             EditProgram.find({"name" : req.query.programName}, function(err,edit_program){
                 if(err)
                     res.send(err);
@@ -78,6 +78,28 @@ router.route('/users')
                                     if(err)
                                         res.send(err);
                                     res.json(user);
+                                });
+                            });
+                        });
+                    });
+                }
+            });
+        }
+        else if(req.query.programName != null && req.query.searchUser == "false"){
+            EditProgram.find({"name" : req.query.programName}, function(err,edit_program){
+                if(err)
+                    res.send(err);
+                else{
+                    edit_program.forEach(function(edit_program){
+                        Exec.find({"e_id": edit_program._id},function(err,exec){
+                            if(err)
+                                res.send(err);
+                            exec.forEach(function(exec){
+                                Support.findById(exec.s_id,function(err,support){
+                                    if(err)
+                                        res.send(err);
+                                    console.log(support);
+                                    res.json({status: support});
                                 });
                             });
                         });
