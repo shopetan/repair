@@ -62,7 +62,7 @@ router.route('/users')
 
 // 全てのユーザ一覧を取得 (GET http://localhost:8080/api/users)
     .get(function(req, res) {
-
+        
         //あるプログラムの作成者を表示する．
         if(req.query.programName != null  && req.query.searchUser == "ture"){
             EditProgram.find({"name" : req.query.programName}, function(err,edit_program){
@@ -124,7 +124,7 @@ router.route('/users/:user_id')
 // 1人のユーザの情報を取得 (GET http://localhost:3000/api/users/:user_id)
     .get(function(req, res) {
         //user_idが一致するデータを探す．
-        User.findById(req.params.user_id, function(err, user) {
+        User.findById({"_id" : req.params.user_id}).populate('edit_programs').exec(function(err, user) {
             if (err)
                 res.send(err);
             res.json(user);
@@ -138,7 +138,7 @@ router.route('/users/:user_id')
             // ユーザの各カラムの情報を更新する．
             user.name = req.body.name;
             user.is_login = req.body.is_login;
-
+            
             user.save(function(err) {
                 if (err)
                     res.send(err);
@@ -163,14 +163,14 @@ router.route('/users/:user_id')
 // ----------------------------------------------------
 router.route('/edit_programs')
 
-// プログラムの作成 (POST http://localhost:3000/api/edit_programs)
+// プログラムの作成 (POST http://localhost:3000/api/edit_programs?userID)
     .post(function(req, res) {
 
         if(req.query.userID != null){
-
+            
             // 新しいプログラムのモデルを作成する．
             var edit_program = new EditProgram();
-
+            
             // プログラムの各カラムの情報を取得する．
             edit_program.name = req.body.name;
             edit_program.type = req.body.type;
@@ -181,9 +181,26 @@ router.route('/edit_programs')
                 if (err)
                     res.send(err);
             });
-
+            
+            User.findById(req.query.userID, function(err, user) {
+                if (err)
+                    res.send(err);
+                // ユーザカラムにプログラムを登録
+                console.log(user.edit_programs.length);
+                user.name = user.name;
+                user.is_login = user.is_login;
+                user.edit_programs[user.edit_programs.length] = edit_program;
+                console.log(edit_program);
+                console.log(user.edit_programs);
+                
+                user.save(function(err) {
+                    if (err)
+                        res.send(err);
+                });
+            });
+                        
             // Editモデルの情報を作成，セーブする．
-
+            
             var edit = new Edit();
             edit.e_id = edit_program._id;
             edit.u_id = req.query.userID;
@@ -191,17 +208,17 @@ router.route('/edit_programs')
             edit.save(function(err) {
                 if (err)
                     res.send(err);
-                res.json({ message: 'Edit created!' });
+                res.json({ message: 'edit_program createted' });
             });
 
         }})
 // 全てのプログラム一覧を取得 (GET http://localhost:8080/api/edit_programs)
     .get(function(req, res) {
         
-        EditProgram.find(function(err, edit_programs) {
+        EditProgram.find().populate('supports').exec(function(err, edit_program) {         
             if (err)
                 res.send(err);
-            res.json(edit_programs);
+            res.json(edit_program);
         });
     });
 
@@ -227,7 +244,7 @@ router.route('/edit_programs/:edit_program_id')
             edit_program.name = req.body.name;
             edit_program.type = req.body.type;
             edit_program.source = req.body.source;
-
+            
             edit_program.save(function(err) {
                 if (err)
                     res.send(err);
@@ -266,17 +283,29 @@ router.route('/supports')
                 if (err)
                     res.send(err);
             });
+            
+            var new_edit_program = new EditProgram();
+            req.params._id = req.query.editProgramID;
 
-            // Execモデルの情報を作成，セーブする．
-            var exec = new Exec();
-            exec.s_id = support._id;
-            exec.e_id = req.query.editProgramID;
-
-            exec.save(function(err) {
+            EditProgram.findById({"_id" : req.params._id}).populate('supports').exec(function(err, edit_program) { 
                 if (err)
                     res.send(err);
-                res.json({ message: 'Exec created!' });
+                new_edit_program.name = edit_program.name;
+                new_edit_program.type = edit_program.type;
+                new_edit_program.source = edit_program.source;
+                
+                for(var i = 0;i < edit_program.supports.length;i++){
+                    new_edit_program.supports[i] = edit_program.supports[i];
+                }
+                new_edit_program.supports[new_edit_program.supports.length] = support;
+                
+                new_edit_program.save(function(err) {
+                    if (err)
+                        res.send(err);
+                    res.send({message: "created edit_program!"}); 
+                });
             });
+            
         }})
 
 // 全ての環境設定一覧を取得 (GET http://localhost:8080/api/supports)
