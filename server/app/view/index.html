@@ -15,7 +15,7 @@
   See the License for the specific language governing permissions and
   limitations under the License
 -->
-<!--
+
 <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 <script type="text/javascript">
 var socket = io.connect('http://localhost:8080');
@@ -40,7 +40,7 @@ function DisConnect() {
 }
 </script>
 
--->
+
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -145,6 +145,19 @@ function DisConnect() {
       <div class="android-content mdl-layout__content">
         <a name="top"></a>
         <div class="android-be-together-section mdl-typography--text-center">
+          <body>
+            <h1>socket.io test</h1>
+            <div id="connectId"></div>
+            <div id="type"></div>
+            <br>
+            <input type="text" id="message" value="">
+            <input type="button" value="メッセージを送る" onclick="SendMsg()">
+            <input type="button" value="切断する" onclick="DisConnect()">
+            <div id="receiveMsg"></div>
+          </body>
+
+
+
           <div class="logo-font android-slogan">be together. not the same.</div>
           <div class="logo-font android-sub-slogan">welcome to android... be yourself. do your thing. see what's going on.</div>
           <div class="logo-font android-create-character">
