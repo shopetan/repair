@@ -51,7 +51,7 @@ router.route('/users')
         // ユーザの各カラムの情報を取得する．
         user.name = req.body.name;
         user.is_login = req.body.is_login;
-
+        
         // ユーザ情報をセーブする．
         user.save(function(err) {
             if (err)
@@ -62,13 +62,38 @@ router.route('/users')
 
 // 全てのユーザ一覧を取得 (GET http://localhost:8080/api/users)
     .get(function(req, res) {
-        User.find(function(err, users) {
-            if (err)
-                res.send(err);
-            res.json(users);
-        });
-    });
 
+        //あるプログラムの作成者を表示する．
+        if(req.query.programName != null){
+            EditProgram.find({"name" : req.query.programName}, function(err,edit_program){
+                if(err)
+                    res.send(err);
+                else{
+                    edit_program.forEach(function(edit_program){
+                        Edit.find({"e_id": edit_program._id},function(err,edit){
+                            if(err)
+                                res.send(err);
+                            edit.forEach(function(edit){
+                                User.findById(edit.u_id,function(err,user){
+                                    if(err)
+                                        res.send(err);
+                                    res.json(user);
+                                });
+                            });
+                        });
+                    });
+                }
+            });
+        }
+        else{
+            User.find(function(err, users) {
+                if (err)
+                    res.send(err);
+                res.json(users);
+            });
+        }
+    });
+        
 
 // /users/:user_id というルートを作成する．
 // ----------------------------------------------------
@@ -150,6 +175,7 @@ router.route('/edit_programs')
         }})
 // 全てのプログラム一覧を取得 (GET http://localhost:8080/api/edit_programs)
     .get(function(req, res) {
+        
         EditProgram.find(function(err, edit_programs) {
             if (err)
                 res.send(err);
