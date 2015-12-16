@@ -4,8 +4,9 @@ var mongoose     = require('mongoose');
 var Schema       = mongoose.Schema;
 
 var EditProgramSchema   = new Schema({
-    os: String,
-    browser: String
+    name: String,
+    type: String,
+    source: String
 });
 
 module.exports = mongoose.model('EditProgram', EditProgramSchema);

@@ -5,6 +5,8 @@
         "express": "~4.0.0",
         "mongoose": "~4.2.7",
         "body-parser": "~1.0.1",
-        "socket.io": ""
+        "socket.io": "~2.10.1",
+        "server-static": "~2.10.1",
+		"connect": "~2.10.1"
     }
 }

@@ -4,15 +4,18 @@
 var express    = require('express');
 var app        = express();
 var bodyParser = require('body-parser');
+var fs         = require('fs');
 
 // DBへの接続
 var mongoose   = require('mongoose');
 mongoose.connect('mongodb://localhost/repair');
 
 // モデルの宣言
-var User       = require('./app/models/user');
+var User              = require('./app/models/user');
 var EditProgram       = require('./app/models/edit_program');
-var Support       = require('./app/models/support');
+var Support           = require('./app/models/support');
+var Edit              = require('./app/models/edit');
+var Exec              = require('./app/models/exec');
 
 
 // POSTでdataを受け取るための記述
@@ -116,22 +119,35 @@ router.route('/edit_programs')
 // プログラムの作成 (POST http://localhost:3000/api/edit_programs)
     .post(function(req, res) {
 
-        // 新しいユーザのモデルを作成する．
-        var edit_program = new EditProgram();
+        if(req.query.userID != null){
 
-        // ユーザの各カラムの情報を取得する．
-        edit_program.name = req.body.name;
-        edit_program.type = req.body.type;
-        edit_program.source = req.body.source;
-        
-        // ユーザ情報をセーブする．
-        edit_program.save(function(err) {
-            if (err)
-                res.send(err);
-            res.json({ message: 'Edit_program created!' });
-        });
-    })
+            // 新しいプログラムのモデルを作成する．
+            var edit_program = new EditProgram();
 
+            // プログラムの各カラムの情報を取得する．
+            edit_program.name = req.body.name;
+            edit_program.type = req.body.type;
+            edit_program.source = req.body.source;
+
+            // プログラム情報をセーブする．
+            edit_program.save(function(err) {
+                if (err)
+                    res.send(err);
+            });
+
+            // Editモデルの情報を作成，セーブする．
+
+            var edit = new Edit();
+            edit.e_id = edit_program._id;
+            edit.u_id = req.query.userID;
+
+            edit.save(function(err) {
+                if (err)
+                    res.send(err);
+                res.json({ message: 'Edit created!' });
+            });
+
+        }})
 // 全てのプログラム一覧を取得 (GET http://localhost:8080/api/edit_programs)
     .get(function(req, res) {
         EditProgram.find(function(err, edit_programs) {
@@ -141,26 +157,25 @@ router.route('/edit_programs')
         });
     });
 
-
 // /edit_programs/:edit_program_id というルートを作成する．
 // ----------------------------------------------------
 router.route('/edit_programs/:edit_program_id')
 
-// 1人のユーザの情報を取得 (GET http://localhost:3000/api/edit_programs/:edit_program_id)
+// 1つのプログラムの情報を取得 (GET http://localhost:3000/api/edit_programs/:edit_program_id)
     .get(function(req, res) {
-        //user_idが一致するデータを探す．
+        //edit_program_idが一致するデータを探す．
         EditProgram.findById(req.params.edit_program_id, function(err, edit_program) {
             if (err)
                 res.send(err);
             res.json(edit_program);
         });
     })
-// 1人のユーザの情報を更新 (PUT http://localhost:3000/api/edit_programs/:edit_program_id)
+// 1つのプログラムの情報を更新 (PUT http://localhost:3000/api/edit_programs/:edit_program_id)
     .put(function(req, res) {
         User.findById(req.params.edit_program_id, function(err, edit_program) {
             if (err)
                 res.send(err);
-            // ユーザの各カラムの情報を更新する．
+            // プログラムの各カラムの情報を更新する．
             edit_program.name = req.body.name;
             edit_program.type = req.body.type;
             edit_program.source = req.body.source;
@@ -173,7 +188,7 @@ router.route('/edit_programs/:edit_program_id')
         });
     })
 
-// 1人のユーザの情報を削除 (DELETE http://localhost:3000/api/edit_programs/:edit_program_id)
+// 1つのプログラムの情報を削除 (DELETE http://localhost:3000/api/edit_programs/:edit_program_id)
     .delete(function(req, res) {
         EditProgram.remove({
             _id: req.params.edit_program_id
@@ -190,21 +205,31 @@ router.route('/supports')
 
 // 推奨環境設定の作成 (POST http://localhost:3000/api/supports)
     .post(function(req, res) {
+        if(req.query.editProgramID != null){
+            // 推奨環境設定のモデルを作成する．
+            var support = new Support();
 
-        // 推奨環境設定のモデルを作成する．
-        var support = new Support();
+            // 推奨環境設定の情報を取得する．
+            support.os = req.body.os;
+            support.browser = req.body.browser;
 
-        // 推奨環境設定の情報を取得する．
-        support.name = req.body.os;
-        support.type = req.body.browser;
-        
-        // 設定をセーブする．
-        support.save(function(err) {
-            if (err)
-                res.send(err);
-            res.json({ message: 'Support created!' });
-        });
-    })
+            // 設定をセーブする．
+            support.save(function(err) {
+                if (err)
+                    res.send(err);
+            });
+
+            // Execモデルの情報を作成，セーブする．
+            var exec = new Exec();
+            exec.s_id = support._id;
+            exec.e_id = req.query.editProgramID;
+
+            exec.save(function(err) {
+                if (err)
+                    res.send(err);
+                res.json({ message: 'Exec created!' });
+            });
+        }})
 
 // 全ての環境設定一覧を取得 (GET http://localhost:8080/api/supports)
     .get(function(req, res) {
@@ -215,14 +240,13 @@ router.route('/supports')
         });
     });
 
-
 // /supports/:support_id というルートを作成する．
 // ----------------------------------------------------
 router.route('/supports/:support_id')
 
 // 1つの環境情報を取得 (GET http://localhost:3000/api/supports/:support_id)
     .get(function(req, res) {
-        //user_idが一致するデータを探す．
+        //support_idが一致するデータを探す．
         Support.findById(req.params.support_id, function(err, support) {
             if (err)
                 res.send(err);
@@ -265,3 +289,32 @@ app.use('/api', router);
 //サーバ起動
 app.listen(port);
 console.log('listen on port ' + port);
+
+
+// USE Socket.io and static page
+
+var http = require('http');
+var viewDir = "./app/view"
+var connect = require('connect');
+var serveStatic = require('serve-static');
+var view = connect();
+view.use(serveStatic(viewDir));
+var viewServer = http.createServer(view);
+viewServer.listen(8080);
+
+// add start
+var socketIO = require('socket.io');
+var io = socketIO.listen(viewServer);
+console.log("listen on port 8080");
+
+io.sockets.on('connection', function(socket) {
+    console.log("connection");
+    socket.on('message', function(data) {
+        console.log("message");
+        io.sockets.emit('message', { value: data.value });
+    });
+
+    socket.on('disconnect', function(){
+        console.log("disconnect");
+    });
+});
