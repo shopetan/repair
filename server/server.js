@@ -98,7 +98,6 @@ router.route('/users')
                                 Support.findById(exec.s_id,function(err,support){
                                     if(err)
                                         res.send(err);
-                                    console.log(support);
                                     res.json({status: support});
                                 });
                             });
@@ -108,7 +107,7 @@ router.route('/users')
             });
         }
         else{
-            User.find(function(err, users) {
+            User.find().populate('edit_programs').exec(function(err, users) {
                 if (err)
                     res.send(err);
                 res.json(users);
@@ -165,7 +164,7 @@ router.route('/edit_programs')
 
 // プログラムの作成 (POST http://localhost:3000/api/edit_programs?userID)
     .post(function(req, res) {
-
+        
         if(req.query.userID != null){
             
             // 新しいプログラムのモデルを作成する．
@@ -175,42 +174,33 @@ router.route('/edit_programs')
             edit_program.name = req.body.name;
             edit_program.type = req.body.type;
             edit_program.source = req.body.source;
-
+            
+            var new_user = new User();
+            req.params.user_id = req.query.userID;
+            User.findById({"_id" : req.params.user_id}).populate('edit_programs').exec(function(err, user) { 
+                if (err)
+                    res.send(err);
+                new_user.name = user.name;
+                new_user.is_login = user.is_login;
+                
+                for(var i = 0;i < user.edit_programs.length;i++){
+                    new_user.edit_programs[i] = user.edit_programs[i];
+                }
+                new_user.edit_programs[new_user.edit_programs.length] = edit_program;
+                
+                new_user.save(function(err) {
+                    if (err)
+                        res.send(err);
+                    res.send({message: "created edit_program!"}); 
+                });
+            });
+            
             // プログラム情報をセーブする．
             edit_program.save(function(err) {
                 if (err)
                     res.send(err);
             });
             
-            User.findById(req.query.userID, function(err, user) {
-                if (err)
-                    res.send(err);
-                // ユーザカラムにプログラムを登録
-                console.log(user.edit_programs.length);
-                user.name = user.name;
-                user.is_login = user.is_login;
-                user.edit_programs[user.edit_programs.length] = edit_program;
-                console.log(edit_program);
-                console.log(user.edit_programs);
-                
-                user.save(function(err) {
-                    if (err)
-                        res.send(err);
-                });
-            });
-                        
-            // Editモデルの情報を作成，セーブする．
-            
-            var edit = new Edit();
-            edit.e_id = edit_program._id;
-            edit.u_id = req.query.userID;
-
-            edit.save(function(err) {
-                if (err)
-                    res.send(err);
-                res.json({ message: 'edit_program createted' });
-            });
-
         }})
 // 全てのプログラム一覧を取得 (GET http://localhost:8080/api/edit_programs)
     .get(function(req, res) {
@@ -235,22 +225,45 @@ router.route('/edit_programs/:edit_program_id')
             res.json(edit_program);
         });
     })
-// 1つのプログラムの情報を更新 (PUT http://localhost:3000/api/edit_programs/:edit_program_id)
+// 1つのプログラムの情報を更新 (PUT http://localhost:3000/api/edit_programs/:edit_program_id?userID)
     .put(function(req, res) {
-        User.findById(req.params.edit_program_id, function(err, edit_program) {
-            if (err)
-                res.send(err);
-            // プログラムの各カラムの情報を更新する．
-            edit_program.name = req.body.name;
-            edit_program.type = req.body.type;
-            edit_program.source = req.body.source;
-            
-            edit_program.save(function(err) {
+        if(req.query.userID != null){
+            EditProgram.findById(req.params.edit_program_id, function(err, edit_program) {
                 if (err)
                     res.send(err);
-                res.json({ message: 'edit_program updated!' });
+                // プログラムの各カラムの情報を更新する．
+                edit_program.name = req.body.name;
+                edit_program.type = req.body.type;
+                edit_program.source = req.body.source;
+                
+                var new_user = new User();
+                req.params.user_id = req.query.edit_program;
+                User.findById({"_id" : req.params.user_id}).populate('edit_programs').exec(function(err, user) { 
+                    if (err)
+                        res.send(err);
+                    new_user.name = user.name;
+                    new_user.is_login = user.type;
+                    
+                    for(var i = 0;i < user.edit_programs.length;i++){
+                        new_user.edit_programs[i] = user.edit_programs[i];
+                    }
+                    new_user.edit_programs[new_user.edit_programs.length] = edit_program;
+                    
+                    new_user.save(function(err) {
+                        if (err)
+                            res.send(err);
+                        res.send({message: "created edit_program!"}); 
+                    });
+                });
+                
+                edit_program.save(function(err) {
+                    if (err)
+                        res.send(err);
+                    res.json({ message: 'edit_program updated!' });
+                });
             });
-        });
+        }
+            
     })
 
 // 1つのプログラムの情報を削除 (DELETE http://localhost:3000/api/edit_programs/:edit_program_id)
@@ -365,13 +378,13 @@ app.use('/api', router);
 
 //サーバ起動
 app.listen(port);
-console.log('listen on port ' + port);
+console.log('listen on port(APIServer) ' + port);
 
 
 // USE Socket.io and static page
 
 var http = require('http');
-var viewDir = "./app/view"
+var viewDir = "./app/view";
 var connect = require('connect');
 var serveStatic = require('serve-static');
 var view = connect();
@@ -382,7 +395,7 @@ viewServer.listen(8080);
 // add start
 var socketIO = require('socket.io');
 var io = socketIO.listen(viewServer);
-console.log("listen on port 8080");
+console.log("listen on port(view)8080");
 
 io.sockets.on('connection', function(socket) {
     console.log("connection");
