@@ -7,6 +7,7 @@
         "body-parser": "~1.0.1",
         "socket.io": "~2.10.1",
         "server-static": "~2.10.1",
-		"connect": "~2.10.1"
+		"connect": "~2.10.1",
+        "cors": "~2.10.1"
     }
 }

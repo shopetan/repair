@@ -1,6 +1,8 @@
 <!doctype html>
-
 <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="http://underscorejs.org/underscore-min.js"></script>
+
 <script type="text/javascript">
 var socket = io.connect('http://localhost:8080');
 
@@ -22,6 +24,75 @@ function DisConnect() {
   socket.emit('message', { value: msg });
   socket.disconnect();
 }
+
+//HTTP Request
+
+function GetAllUserAPI(theUrl){
+  fetch('http://localhost:3000/api/users')
+    .then(
+      function(response) {
+        if (response.status !== 200) {
+          console.log('Looks like there was a problem. Status Code: ' +
+            response.status);
+          return;
+        }
+        // Examine the text in the response
+        response.json().then(function(data) {
+          for(var i = 0; i < data.length; i++){
+            console.log(data[i]);
+            DrawHTML(data[i]);
+          }
+        });
+      }
+    )
+    .catch(function(err) {
+      console.log('Fetch Error :-S', err);
+    });
+}
+
+function PostUserCreateAPI(theUrl,u_name,is_login){
+  fetch(theUrl, {
+    method: 'post',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      name: 'Hubot',
+      is_login: 'false',
+    })
+  })
+}
+
+function DrawHTML(item){
+  var template = [
+    '<div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--4-col-phone mdl-card mdl-shadow--3dp">',
+      '<div class="mdl-card__media">',
+      '</div>',
+      '<div class="mdl-card__title">',
+         '<h4 class="mdl-card__title-text"><%- name %></h4>',
+      '</div>',
+      '<div class="mdl-card__supporting-text">',
+        '<p class="mdl-typography--font-light mdl-typography--subhead">user_id:<%- _id %></p>',
+        '<span class="mdl-typography--font-light mdl-typography--subhead">login:<%- is_login %></span>',
+      '</div>',
+      '<div class="mdl-card__actions">',
+        ' <a class="android-link mdl-button mdl-js-button mdl-typography--text-uppercase" href="">',
+        ' 詳細画面へ',
+        '   <i class="material-icons">chevron_right</i>',
+        ' </a>',
+      '</div>',
+    '</div>'
+  ].join("");
+
+  $("#detail").append(_.template(template)({name:item.name,
+                                            is_login:item.is_login,
+                                            _id:item._id}))
+}
+
+var theUrl = "http://localhost:3000/api/users/5671971be888ed162bd02fd1";
+GetAllUserAPI(theUrl);
+
 </script>
 
 
@@ -38,20 +109,9 @@ function DisConnect() {
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="./css/material.min.css">
     <link rel="stylesheet" href="./css/styles.css">
-    <style>
-    #view-source {
-      position: fixed;
-      display: block;
-      right: 0;
-      bottom: 0;
-      margin-right: 40px;
-      margin-bottom: 40px;
-      z-index: 900;
-    }
-    </style>
   </head>
   <body>
-    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" >
 
       <div class="android-header mdl-layout__header mdl-layout__header--waterfall">
         <div class="mdl-layout__header-row">
@@ -76,7 +136,6 @@ function DisConnect() {
             </nav>
           </div>
           <span class="android-mobile-title mdl-layout-title">
-            <img class="android-logo-image" src="images/android-logo.png">
           </span>
           <button class="android-more-button mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect" id="more-button">
             <i class="material-icons">more_vert</i>
@@ -106,47 +165,10 @@ function DisConnect() {
         <a name="top"></a>
         <div class="android-be-together-section mdl-typography--text-center">
           <body>
-
-          <div class="logo-font android-slogan">Repair</div>
-          <div class="logo-font android-sub-slogan">遠隔ペアプログラミング支援システム</div>
-          <br><br><br><br>
-          <div class="logo-font android-sub-slogan">遠隔ペアプロで 空間を Hackする。</div>
-
-          <a href="#screens">
-            <button class="android-fab mdl-button mdl-button--colored mdl-js-button mdl-button--fab mdl-js-ripple-effect">
-              <i class="material-icons">expand_more</i>
-            </button>
-          </a>
-        </div>
-        <div class="android-wear-section">
-          <div class="android-wear-band" id="screens">
-            <div class="android-wear-band-text">
-              <div class="mdl-typography--display-2 mdl-typography--font-thin">プログラミングを 遠隔で</div>
-              <br><br>
-              <p class="mdl-typography--headline mdl-typography--font-thin">
-                一般的なペアプログラミングでは その場でお互いが話し合い プログラミングを行います．
-              </p>
-              <p class="mdl-typography--headline mdl-typography--font-thin">このシステムでは その他外部の会話サービスと併用する事で 遠隔地でもペアプログラミング実現可能な世界を創造します．</p>
-              <br><br><br>
-              <div class="mdl-grid">
-                <div><img  class="mdl-cell mdl-cell--2-col" src="images/stationery.png">複数人でも制作可能に．</div>
-                <div><img class="mdl-cell mdl-cell--2-col" src="images/notepad.png">自分自身のメモ書きとしても</div>
-              </div>
-            </div>
+        <div class="android-more-section">
+          <div class="android-section-title mdl-typography--display-1-color-contrast">All Users</div>
+          <div class="android-card-container mdl-grid"  id="detail">
           </div>
-        </div>
-        <div class="android-customized-section">
-          <div class="android-customized-section-text">
-            <div class="mdl-typography--font-light mdl-typography--display-1-color-contrast">あなたが開発者に</div>
-            <p class="mdl-typography--font-light">
-              このシステムはOSSとして公開されています．
-              あなたの手でシステムを改善しませんか?
-              <br>
-              <a href="" class="android-link mdl-typography--font-light">Git clone this OSS</a>
-            </p>
-          </div>
-          <div class="android-customized-section-image"></div>
-        </div>
 
         <footer class="android-footer mdl-mega-footer">
           <div class="mdl-mega-footer--top-section">
@@ -165,23 +187,7 @@ function DisConnect() {
         </footer>
       </div>
     </div>
-    <a href="https://github.com/shopetan/repair" target="_blank" id="view-source" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--accent mdl-color-text--accent-contrast">View GitHub</a>
     <script src="./material.min.js"></script>
-    <script>
-    var request = require('request');
-    var options = {
-      url: 'http://localhost:3000/api/user',
-      json: true
-    };
-
-    request.get(options, function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-        console.log(body.name);
-      } else {
-        console.log('error: '+ response.statusCode);
-      }
-    })
-</script>
 
   </body>
 </html>
