@@ -1,29 +1,7 @@
 <!doctype html>
 
 <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-<script type="text/javascript">
-var socket = io.connect('http://localhost:8080');
-
-socket.on('connect', function(msg) {
-    console.log("connet");
-});
-
-socket.on('message', function(msg) {
-  console.log("send");
-    document.getElementById("receiveMsg").innerHTML = msg.value;
-});
-
-function SendMsg() {
-  var msg = document.getElementById("message").value;
-    socket.emit('message', { value: msg });
-  }
-
-function DisConnect() {
-  socket.emit('message', { value: msg });
-  socket.disconnect();
-}
-</script>
-
+<script type="text/javascript" src="./client.js"></script>
 
 <html lang="en">
   <head>
@@ -71,8 +49,8 @@ function DisConnect() {
           <!-- Navigation -->
           <div class="android-navigation-container">
             <nav class="android-navigation mdl-navigation">
-              <a class="mdl-navigation__link mdl-typography--text-uppercase" href="">User</a>
-              <a class="mdl-navigation__link mdl-typography--text-uppercase" href="">Details</a>
+              <a class="mdl-navigation__link mdl-typography--text-uppercase" href="./users.html">Users</a>
+              <a class="mdl-navigation__link mdl-typography--text-uppercase" href="create.html">Create</a>
             </nav>
           </div>
           <span class="android-mobile-title mdl-layout-title">
@@ -93,8 +71,8 @@ function DisConnect() {
           Repair
         </span>
         <nav class="mdl-navigation">
-          <a class="mdl-navigation__link" href="">User</a>
-          <a class="mdl-navigation__link" href="">Details</a>
+          <a class="mdl-navigation__link" href="./users.html">Users</a>
+          <a class="mdl-navigation__link" href="./create.html">Create</a>
           <div class="android-drawer-separator"></div>
           <span class="mdl-navigation__link" href="">More infomation</span>
           <a class="mdl-navigation__link" href="https://github.com/shopetan/repair">View Github</a>
