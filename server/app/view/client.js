@@ -55,10 +55,9 @@ function GetEditProgramAPI(theUrl){
         }
         // Examine the text in the response
         response.json().then(function(data) {
-          for(var i = 0; i < data.length; i++){
-            console.log(data[i]);
-            DrawEditProgramsHTML(data[i]);
-          }
+			for(var i = 0; i < data.edit_programs.length; i++){
+	            DrawEditProgramsHTML(data.edit_programs[i]);
+			}
         });
       }
     )
@@ -102,9 +101,9 @@ function DrawUsersHTML(item){
     '</div>'
   ].join("");
 
-  $("#users").append(_.template(template)({name:item.name,
-                                            is_login:item.is_login,
-                                            _id:item._id}))
+  $("#users").append(_.template(template)({name      :item.name,
+                                            is_login :item.is_login,
+                                            _id      :item._id}))
 }
 
 function DrawEditProgramsHTML(item){
@@ -126,10 +125,10 @@ function DrawEditProgramsHTML(item){
       '</div>',
     '</div>'
   ].join("");
-
-  $("#details").append(_.template(template)({name:item.edit_programs.name,
-                                            type :item.edit_programs.type,
-                                            _id  :item.edit_programs._id}))
+  console.log(item);
+  $("#editPrograms").append(_.template(template)({name:item.name,
+                                            type :item.type,
+                                            _id  :item._id}))
 }
 
 function getURL(theUrl){
@@ -137,12 +136,21 @@ function getURL(theUrl){
 }
 
 function decideAPI(routeAPI,theUrl){
+	//Use GetAllUserAPI
 	if(theUrl.match(/users/) != null){
 		theUrl = routeAPI + 'users';
 		GetAllUserAPI(theUrl);
 	}
+	//Use GetEditProgramAPI
 	else if(theUrl.match(/detail/) != null){
-		console.log(theUrl.match(/detail/));
+		// urlの?以降(クエリパラメータを取得する)
+		var reg=new RegExp("\\?(.+?)$");
+		if(theUrl.match(reg)){
+			var str = theUrl.match(reg)[1];
+			var query = str.split("=");
+			theUrl = routeAPI + 'users/' + query[1];
+			GetEditProgramAPI(theUrl);
+		}
 	}
 
 }
