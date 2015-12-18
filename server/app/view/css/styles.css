@@ -18,6 +18,9 @@ body {
   margin: 0;
 }
 
+div.top {
+  background: url(../images/top2.jpg) center center / cover no-repeat fixed;
+}
 /* Disable ugly boxes around images in IE10 */
 a img{
   border: 0px;
