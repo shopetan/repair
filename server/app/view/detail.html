@@ -3,6 +3,12 @@
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="http://underscorejs.org/underscore-min.js"></script>
 <script type="text/javascript" src="./client.js"></script>
+<script type="text/javascript">
+  var routeAPI = "http://localhost:3000/api/";
+  var theUrl = getURL(window.location.href);
+  console.log(theUrl);
+  decideAPI(routeAPI,theUrl);
+</script>
 
 <html lang="en">
   <head>
@@ -75,7 +81,7 @@
           <body>
         <div class="android-more-section">
           <div class="android-section-title mdl-typography--display-1-color-contrast">All Users</div>
-          <div class="android-card-container mdl-grid"  id="detail">
+          <div class="android-card-container mdl-grid"  id="EditPrograms">
           </div>
 
         <footer class="android-footer mdl-mega-footer">

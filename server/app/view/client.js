@@ -34,7 +34,7 @@ function GetAllUserAPI(theUrl){
         response.json().then(function(data) {
           for(var i = 0; i < data.length; i++){
             console.log(data[i]);
-            DrawHTML(data[i]);
+            DrawUsersHTML(data[i]);
           }
         });
       }
@@ -43,6 +43,30 @@ function GetAllUserAPI(theUrl){
       console.log('Fetch Error :-S', err);
     });
 }
+
+function GetEditProgramAPI(theUrl){
+  fetch(theUrl)
+    .then(
+      function(response) {
+        if (response.status !== 200) {
+          console.log('Looks like there was a problem. Status Code: ' +
+            response.status);
+          return;
+        }
+        // Examine the text in the response
+        response.json().then(function(data) {
+          for(var i = 0; i < data.length; i++){
+            console.log(data[i]);
+            DrawEditProgramsHTML(data[i]);
+          }
+        });
+      }
+    )
+    .catch(function(err) {
+      console.log('Fetch Error :-S', err);
+    });
+}
+
 
 function PostUserCreateAPI(theUrl,u_name,is_login){
   fetch(theUrl, {
@@ -58,7 +82,7 @@ function PostUserCreateAPI(theUrl,u_name,is_login){
   })
 }
 
-function DrawHTML(item){
+function DrawUsersHTML(item){
   var template = [
     '<div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--4-col-phone mdl-card mdl-shadow--3dp">',
       '<div class="mdl-card__media">',
@@ -83,5 +107,42 @@ function DrawHTML(item){
                                             _id:item._id}))
 }
 
-var theUrl = "http://localhost:3000/api/users";
-GetAllUserAPI(theUrl);
+function DrawEditProgramsHTML(item){
+  var template = [
+    '<div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--4-col-phone mdl-card mdl-shadow--3dp">',
+      '<div class="mdl-card__media">',
+      '</div>',
+      '<div class="mdl-card__title">',
+         '<h4 class="mdl-card__title-text"><%- name %></h4>',
+      '</div>',
+      '<div class="mdl-card__supporting-text">',
+        '<span class="mdl-typography--font-light mdl-typography--subhead">type:<%- type %></span>',
+      '</div>',
+      '<div class="mdl-card__actions">',
+        ' <a class="android-link mdl-button mdl-js-button mdl-typography--text-uppercase" href="create.html?editProgramID=<%- _id %>">',
+        ' このコードを編集する',
+        '   <i class="material-icons">chevron_right</i>',
+        ' </a>',
+      '</div>',
+    '</div>'
+  ].join("");
+
+  $("#details").append(_.template(template)({name:item.edit_programs.name,
+                                            type :item.edit_programs.type,
+                                            _id  :item.edit_programs._id}))
+}
+
+function getURL(theUrl){
+	return theUrl;
+}
+
+function decideAPI(routeAPI,theUrl){
+	if(theUrl.match(/users/) != null){
+		theUrl = routeAPI + 'users';
+		GetAllUserAPI(theUrl);
+	}
+	else if(theUrl.match(/detail/) != null){
+		console.log(theUrl.match(/detail/));
+	}
+
+}
