@@ -61,7 +61,7 @@
           </button>
           <ul class="mdl-menu mdl-js-menu mdl-menu--bottom-right mdl-js-ripple-effect" for="more-button">
             <li class="mdl-menu__item" ><a class="mdl-navigation__link" href="https://github.com/shopetan/repair">View Github</a></li>
-            <li class="mdl-menu__item" ><a class="mdl-navigation__link" href="https://shopetan.io">Author Pages</a></li>
+            <li class="mdl-menu__item" ><a class="mdl-navigation__link" href="https://shopetan.github.io">Author Pages</a></li>
           </ul>
         </div>
       </div>
@@ -76,7 +76,7 @@
           <div class="android-drawer-separator"></div>
           <span class="mdl-navigation__link" href="">More infomation</span>
           <a class="mdl-navigation__link" href="https://github.com/shopetan/repair">View Github</a>
-          <a class="mdl-navigation__link" href="https://shopetan.io">Author's Pages</a>
+          <a class="mdl-navigation__link" href="https://shopetan.github.io">Author's Pages</a>
         </nav>
       </div>
 
@@ -145,21 +145,5 @@
     </div>
     <a href="https://github.com/shopetan/repair" target="_blank" id="view-source" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--accent mdl-color-text--accent-contrast">View GitHub</a>
     <script src="./material.min.js"></script>
-    <script>
-    var request = require('request');
-    var options = {
-      url: 'http://localhost:3000/api/user',
-      json: true
-    };
-
-    request.get(options, function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-        console.log(body.name);
-      } else {
-        console.log('error: '+ response.statusCode);
-      }
-    })
-</script>
-
   </body>
 </html>
