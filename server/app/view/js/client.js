@@ -76,9 +76,9 @@ function PostUserCreateAPI(theUrl,u_name,is_login){
     },
     body: JSON.stringify({
       name: 'Hubot',
-      is_login: 'false',
+      is_login: 'false'
     })
-  })
+  });
 }
 
 function DrawUsersHTML(item){
@@ -97,13 +97,13 @@ function DrawUsersHTML(item){
         ' 詳細画面へ',
         '   <i class="material-icons">chevron_right</i>',
         ' </a>',
-      '</div>',
+    '</div>',
     '</div>'
   ].join("");
 
   $("#users").append(_.template(template)({name      :item.name,
                                             is_login :item.is_login,
-                                            _id      :item._id}))
+                                           _id      :item._id}));
 }
 
 function DrawEditProgramsHTML(item){
@@ -123,11 +123,11 @@ function DrawEditProgramsHTML(item){
         '   <i class="material-icons">chevron_right</i>',
         ' </a>',
       '</div>',
-    '</div>'
+      '</div>'
   ].join("");
   $("#editPrograms").append(_.template(template)({name:item.name,
                                             type :item.type,
-                                            _id  :item._id}))
+                                            _id  :item._id}));
 }
 
 function DrawSingleUserHTML(item){
@@ -135,7 +135,7 @@ function DrawSingleUserHTML(item){
 	  '<img class="mdl-cell mdl-cell--4-col" src="images/stationery.png"><div class="logo-font android-sub-slogan"><%- name %></div>'
   ].join("");
 
-  $("#user").append(_.template(template)({name : item.name}))
+    $("#user").append(_.template(template)({name : item.name}));
 }
 
 function getURL(theUrl){
@@ -143,15 +143,23 @@ function getURL(theUrl){
 }
 
 function decideAPI(routeAPI,theUrl){
+    var reg = new RegExp("\\?(.+?)$");
 	//Use GetAllUserAPI
 	if(theUrl.match(/users/) != null){
-		theUrl = routeAPI + 'users';
-		GetAllUserAPI(theUrl);
-	}
+        if(theUrl.match(reg)){
+            var str = theUrl.match(reg)[1];
+            theUrl = routeAPI + 'users' +'?' + str;
+            console.log(theUrl);
+            GetAllUserAPI(theUrl);
+        }
+        else{
+		    theUrl = routeAPI + 'users';
+		    GetAllUserAPI(theUrl);
+        }
+    }
 	//Use GetEditProgramAPI
-	else if(theUrl.match(/detail/) != null){
+    else if(theUrl.match(/detail/) != null){
 		// urlの?以降(クエリパラメータを取得する)
-		var reg=new RegExp("\\?(.+?)$");
 		if(theUrl.match(reg)){
 			var str = theUrl.match(reg)[1];
 			var query = str.split("=");
@@ -159,5 +167,4 @@ function decideAPI(routeAPI,theUrl){
 			GetEditProgramAPI(theUrl);
 		}
 	}
-
 }

@@ -1,12 +1,15 @@
 <!-- Add spacer, to align navigation to the right in desktop -->
 <div class="android-header-spacer mdl-layout-spacer"></div>
 <div class="android-search-box mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right mdl-textfield--full-width">
+<form action="users.html" method="get">
   <label class="mdl-button mdl-js-button mdl-button--icon" for="search-field">
     <i class="material-icons">search</i>
   </label>
   <div class="mdl-textfield__expandable-holder">
-    <input class="mdl-textfield__input" type="text" id="search-field">
+    <input class="mdl-textfield__input" type="text" id="search-field" name="userName">
+    <label class="mdl-textfield__label">Search User</label>
   </div>
+</form>
 </div>
 <!-- Navigation -->
 <div class="android-navigation-container">
@@ -15,9 +18,6 @@
     <a class="mdl-navigation__link mdl-typography--text-uppercase" href="create.html">Create</a>
   </nav>
 </div>
-<span class="android-mobile-title mdl-layout-title">
-  <img class="android-logo-image" src="images/android-logo.png">
-</span>
 <button class="android-more-button mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect" id="more-button">
   <i class="material-icons">more_vert</i>
 </button>
