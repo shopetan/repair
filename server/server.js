@@ -108,6 +108,16 @@ router.route('/users')
                 }
             });
         }
+        else if(req.query.userName != null){
+            User.find({name: req.query.userName}).populate('edit_programs').exec(function(err, users) {
+                if (err)
+                    res.send(err);
+                res.header(
+                    'Access-Control-Allow-Origin','*'
+                );
+                res.json(users);
+            });
+        }
         else{
             User.find().populate('edit_programs').exec(function(err, users) {
                 if (err)
