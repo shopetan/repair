@@ -33,7 +33,6 @@ function GetAllUserAPI(theUrl){
         // Examine the text in the response
         response.json().then(function(data) {
           for(var i = 0; i < data.length; i++){
-            console.log(data[i]);
             DrawUsersHTML(data[i]);
           }
         });
@@ -55,6 +54,7 @@ function GetEditProgramAPI(theUrl){
         }
         // Examine the text in the response
         response.json().then(function(data) {
+			DrawSingleUserHTML(data);
 			for(var i = 0; i < data.edit_programs.length; i++){
 	            DrawEditProgramsHTML(data.edit_programs[i]);
 			}
@@ -125,10 +125,17 @@ function DrawEditProgramsHTML(item){
       '</div>',
     '</div>'
   ].join("");
-  console.log(item);
   $("#editPrograms").append(_.template(template)({name:item.name,
                                             type :item.type,
                                             _id  :item._id}))
+}
+
+function DrawSingleUserHTML(item){
+	var template = [
+	  '<img class="mdl-cell mdl-cell--4-col" src="images/stationery.png"><div class="logo-font android-sub-slogan"><%- name %></div>'
+  ].join("");
+
+  $("#user").append(_.template(template)({name : item.name}))
 }
 
 function getURL(theUrl){
