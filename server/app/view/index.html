@@ -5,8 +5,6 @@
 <script type="text/javascript" src="./js/client.js"></script>
 <script type="text/javascript" src="./js/material.min.js"></script>
 <script type="text/javascript" src="./js/common.js"></script>
-
-
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -35,74 +33,81 @@
   <body>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
 
-      <div class="android-header mdl-layout__header mdl-layout__header--waterfall">
-        <div class="mdl-layout__header-row">
-          <span class="android-title mdl-layout-title">
-              <div class="logo-font"><a href="./index.html" class="android-link ">Repair</a></div>
-          </span>
-      <!-- Add header -->
-      <script>
-        writeHeader();
-      </script>
+      <div class="space-frame top">
+        <section class="space-inner-frame" data-duration="3" data-transition="scaleOut fadeOut">
+          <div class="android-content mdl-layout__content">
+            <div class="android-be-together-section mdl-typography--text-center">
 
-      <!-- Add navbar -->
-      <script>
-        writeNavbar();
-      </script>
+              <div class="logo-font android-slogan">Repair</div>
+              <div class="logo-font android-sub-slogan">遠隔ペアプログラミング支援システム</div>
+              <br><br><br><br>
+              <div class="logo-font android-sub-slogan">遠隔ペアプロで 空間を Hackする。</div>
+            </div>
+        </section>
+      </div>
 
-      <div class="android-content mdl-layout__content">
-        <a name="top"></a>
-        <div class="android-be-together-section mdl-typography--text-center">
-          <body>
+      <div class="space-frame top">
+        <section class="space-inner-frame" data-duration="6" data-transition="scaleOut fadeOut slideInLeft">
+          <div class="mdl-typography--display-2 mdl-typography--font-thin">プログラミングを 遠隔で</div>
+          <br><br>
+          <p class="mdl-typography--headline mdl-typography--font-thin">
+            一般的なペアプログラミングでは その場でお互いが話し合い プログラミングを行います．
+          </p>
+          <p class="mdl-typography--headline mdl-typography--font-thin">このシステムでは その他外部の会話サービスと併用する事で 遠隔地でもペアプログラミング実現可能な世界を創造します．</p>
+          <br><br><br>
+          <div class="mdl-grid">
+            <div><img  class="mdl-cell mdl-cell--2-col" src="images/stationery.png">複数人でも制作可能に．</div>
+            <div><img class="mdl-cell mdl-cell--2-col" src="images/notepad.png">自分自身のメモ書きとしても</div>
+          </div>
+        </section>
+      </div>
 
-          <div class="logo-font android-slogan">Repair</div>
-          <div class="logo-font android-sub-slogan">遠隔ペアプログラミング支援システム</div>
-          <br><br><br><br>
-          <div class="logo-font android-sub-slogan">遠隔ペアプロで 空間を Hackする。</div>
-
-          <a href="#screens">
-            <button class="android-fab mdl-button mdl-button--colored mdl-js-button mdl-button--fab mdl-js-ripple-effect">
-              <i class="material-icons">expand_more</i>
-            </button>
-          </a>
-        </div>
-        <div class="android-wear-section">
-          <div class="android-wear-band" id="screens">
-            <div class="android-wear-band-text">
-              <div class="mdl-typography--display-2 mdl-typography--font-thin">プログラミングを 遠隔で</div>
-              <br><br>
-              <p class="mdl-typography--headline mdl-typography--font-thin">
-                一般的なペアプログラミングでは その場でお互いが話し合い プログラミングを行います．
+      <div class="space-frame top">
+        <section class="space-inner-frame" data-duration="9" data-transition="scaleOut fadeOut">
+          <div class="android-customized-section">
+            <div class="android-customized-section-text">
+              <div class="mdl-typography--font-light mdl-typography--display-1-color-contrast">あなたが開発者に</div>
+              <p class="mdl-typography--font-light">
+                このシステムはOSSとして公開されています．
+                あなたの手でシステムを改善しませんか?
+                <br>
+                <a href="https://github.com/shopetan/repair" class="android-link mdl-typography--font-light">Git clone this OSS</a>
               </p>
-              <p class="mdl-typography--headline mdl-typography--font-thin">このシステムでは その他外部の会話サービスと併用する事で 遠隔地でもペアプログラミング実現可能な世界を創造します．</p>
-              <br><br><br>
+            </div>
+            <div class="android-customized-section-image"></div>
+          </div>
+        </section>
+      </div>
+
+      <div class="space-frame top ">
+        <section class="space-inner-frame" data-duration="12" data-transition="fadeIn">
+          <div class="android-content mdl-layout__content">
+            <a name="top"></a>
+            <div class="android-be-together-section mdl-typography--text-center">
+              <div class="logo-font android-slogan">Let's use this</div>
+              <br><br>
               <div class="mdl-grid">
-                <div><img  class="mdl-cell mdl-cell--2-col" src="images/stationery.png">複数人でも制作可能に．</div>
-                <div><img class="mdl-cell mdl-cell--2-col" src="images/notepad.png">自分自身のメモ書きとしても</div>
+                <div class="mdl-cell mdl-cell--6-col">
+                  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="location.href='./users.html'">
+                    View Users
+                  </button>
+                </div>
+                <div class="mdl-cell mdl-cell--6-col">
+                  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"  onclick="location.href='./create.html'">
+                    Create Programs
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-        <div class="android-customized-section">
-          <div class="android-customized-section-text">
-            <div class="mdl-typography--font-light mdl-typography--display-1-color-contrast">あなたが開発者に</div>
-            <p class="mdl-typography--font-light">
-              このシステムはOSSとして公開されています．
-              あなたの手でシステムを改善しませんか?
-              <br>
-              <a href="" class="android-link mdl-typography--font-light">Git clone this OSS</a>
-            </p>
-          </div>
-          <div class="android-customized-section-image"></div>
-        </div>
-
-        <!-- Add navbar -->
-        <script>
-          writeFooter();
-        </script>
-
+        </section>
       </div>
-    </div>
+
+      <div class="space-frame">
+        <section class="space-inner-frame" data-duration="15" data-transition="fadeIn">
+        </section>
+      </div>
+
     <a href="https://github.com/shopetan/repair" target="_blank" id="view-source" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--accent mdl-color-text--accent-contrast">View GitHub</a>
+    <script type="text/javascript" src="./js/space.js"></script>
   </body>
 </html>
