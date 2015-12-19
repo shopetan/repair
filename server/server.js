@@ -108,6 +108,20 @@ router.route('/users')
                 }
             });
         }
+        else if(req.query.name != null && req.query.type != null && req.query.source != null){
+            console.log(req.query.name);
+            console.log(req.query.type);
+            console.log(req.query.source);
+            User.find({'edit_programs.name': req.query.name, 'edit_programs.type': req.query.type, 'edit_programs.source': req.query.source}).populate('edit_programs').exec(function(err, users) {
+                if (err)
+                    res.send(err);
+                res.header(
+                    'Access-Control-Allow-Origin','*'
+                );
+                res.json(users);
+            });
+
+        }
         else if(req.query.userName != null){
             User.find({name: req.query.userName}).populate('edit_programs').exec(function(err, users) {
                 if (err)
@@ -202,6 +216,7 @@ router.route('/edit_programs')
                     new_user.edit_programs[i] = user.edit_programs[i];
                 }
                 new_user.edit_programs[new_user.edit_programs.length] = edit_program;
+                console.log(new_user);
 
                 new_user.save(function(err) {
                     if (err)

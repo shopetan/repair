@@ -7,6 +7,11 @@
 <script type="text/javascript" src="./js/material.min.js"></script>
 <script type="text/javascript" src="./js/common.js"></script>
 
+<style>
+.mdl-card {
+  width: 1024px;
+}
+</style>
 
 <script type="text/javascript">
   var routeAPI = "http://localhost:3000/api/";
@@ -32,40 +37,50 @@
   <body>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" >
 
-      <!-- Add header -->
-      <script>
-        writeHeader();
-      </script>
+          <!-- Add header -->
+          <script>
+            writeHeader();
+          </script>
 
-      <!-- Add navbar -->
-      <script>
-        writeNavbar();
-      </script>
+          <!-- Add navbar -->
+          <script>
+            writeNavbar();
+          </script>
 
       <div class="android-content mdl-layout__content">
         <a name="top"></a>
         <div class="android-be-together-section mdl-typography--text-center">
           <body>
         <div class="android-more-section">
-          <div class="android-section-title mdl-typography--display-1-color-contrast">All Users</div>
+          <div class="android-section-title mdl-typography--display-1-color-contrast">Edit Program</div>
 
-          <!-- Simple Textfield -->
-          <form action="users.html" method="get">
-            <div class="mdl-textfield mdl-js-textfield">
-              <input class="mdl-textfield__input" type="text" id="search-field1" name="userName">
-              <label class="mdl-textfield__label" for="search-field1">Search Users</label>
+          <div class="android-customized-section">
+            <div class="android-customized-section-text">
+              <div class="mdl-grid">
+                <form id="EditProgram"></form>
+                <br><br><br>
+              </div>
             </div>
-          </form>
-
-          <div class="android-card-container mdl-grid"  id="users">
           </div>
+
+          <div class="mdl-grid" id="save_button">
+            <div class="mdl-cell mdl-cell--6-col">
+              <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"  onclick="location.href='./create.html'">
+                Create Programs
+              </button>
+            </div>
+            <div class="mdl-cell mdl-cell--6-col">
+              <input type="submit" value="Save Program" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="saveProgram(routeAPI,theUrl);">
+              </button>
+            </div>
+          </div>
+
 
         <!-- Add navbar -->
         <script>
           writeFooter();
         </script>
 
-        </footer>
       </div>
     </div>
 
