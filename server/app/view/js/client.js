@@ -51,7 +51,6 @@ function DrawSingleEditProgramsHTML(item){
       '<div class="mdl-card__media">',
       '</div>',
       '<div class="mdl-card__title">',
-
       '<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">',
       '<input class="mdl-textfield__input" type="text" id="name" value="<%- name %>">',
       '<label class="mdl-textfield__label" for="name">Title</label>',
@@ -69,11 +68,11 @@ function DrawSingleEditProgramsHTML(item){
       '</div>',
       '</div>'
   ].join("");
-
+  console.log(item);
   $("#EditProgram").append(_.template(template)({name:item.name,
                                             type :item.type,
                                             source  :item.source}));
-                                            console.log("ok");
+                                            console.log("なぜだ");
 }
 
 function DrawEditProgramsHTML(item,i){
@@ -144,7 +143,7 @@ function GetAllUserAPI(theUrl){
     });
 }
 
-function GetSingleEditProgramAPI(theUrl,method){
+function GetSingleEditProgramAPI(theUrl){
   fetch(theUrl)
     .then(
       function(response) {
@@ -270,6 +269,16 @@ function DeleteUserAPI(theUrl){
   });
 }
 
+function DeleteEditProgramAPI(theUrl){
+    fetch(theUrl, {
+      method: 'delete',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+  });
+}
+
 function saveProgram(routeAPI,theUrl){
     var reg = new RegExp("\\?(.+?)$");
     var name = document.forms.EditProgram.name.value;
@@ -285,6 +294,8 @@ function saveProgram(routeAPI,theUrl){
             for (var i = 0;i < query.length;i++){
                 method[i] = query[i].split("=");
             }
+            DeleteEditProgramUrl = routeAPI + 'edit_programs/' + method[0][1];
+            DeleteEditProgramAPI(DeleteEditProgramUrl);
             PostEditProgramUrl = routeAPI + 'edit_programs' + '?userID=' + method[1][1];
             PostEditProgramAPI(PostEditProgramUrl,name,type,source);
             DeleteUserUrl = routeAPI + 'users/' + method[1][1];
@@ -340,11 +351,18 @@ function decideAPI(routeAPI,theUrl){
                 method[i] = query[i].split("=");
             }
             theUrl = routeAPI + 'edit_programs/' + method[0][1];
-            GetSingleEditProgramAPI(theUrl,method[1][1]);
+            GetSingleEditProgramAPI(theUrl);
+        }else{
+            var intro = {};
+            intro.source = "source";
+            intro.type = "type";
+            intro.name = "title";
+            intro.source =  "うーんできたっぽい?↵aaa↵waaaaaaaaaaaaaaaaai";
+            intro.type =  "てすとようの";
+            intro.name = "これは";
+            DrawSingleEditProgramsHTML(intro);
         }
     }else{
-        theUrl = routeAPI + 'edit_programs'
-        GetSingleEditProgramAPI(theUrl,method[1][1]);
     }
 
 }
