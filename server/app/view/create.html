@@ -8,9 +8,9 @@
 <script type="text/javascript" src="./js/common.js"></script>
 
 <style>
-.mdl-card {
+  .mdl-card {
   width: 1024px;
-}
+  }
 </style>
 
 <script type="text/javascript">
@@ -37,45 +37,44 @@
   <body>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" >
 
-          <!-- Add header -->
-          <script>
-            writeHeader();
-          </script>
+      <!-- Add header -->
+      <script>
+        writeHeader();
+      </script>
 
-          <!-- Add navbar -->
-          <script>
-            writeNavbar();
-          </script>
+      <!-- Add navbar -->
+      <script>
+        writeNavbar();
+      </script>
 
       <div class="android-content mdl-layout__content">
         <a name="top"></a>
         <div class="android-be-together-section mdl-typography--text-center">
-          <body>
-        <div class="android-more-section">
-          <div class="android-section-title mdl-typography--display-1-color-contrast">Edit Program</div>
+            <div class="android-more-section">
+              <div class="android-section-title mdl-typography--display-1-color-contrast">Edit Program</div>
 
-          <div class="android-customized-section">
-            <div class="android-customized-section-text">
-              <div class="mdl-grid">
-                <form id="EditProgram"></form>
-                <br><br><br>
+              <div class="android-customized-section">
+                <div class="android-customized-section-text">
+                  <div class="mdl-grid">
+                    <form id="EditProgram"></form>
+                    <br><br><br>
+                  </div>
+                </div>
               </div>
+
+              <div class="mdl-grid" id="save_button">
+                <input type="submit" value="Save Program" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="saveProgram(routeAPI,theUrl);">
+              </div>
+
+
+              <!-- Add navbar -->
+              <script>
+                writeFooter();
+              </script>
+
             </div>
-          </div>
-
-          <div class="mdl-grid" id="save_button">
-              <input type="submit" value="Save Program" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="saveProgram(routeAPI,theUrl);">
-              </button>
-          </div>
-
-
-        <!-- Add navbar -->
-        <script>
-          writeFooter();
-        </script>
-
+        </div>
       </div>
     </div>
-
   </body>
 </html>
