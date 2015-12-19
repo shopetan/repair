@@ -220,11 +220,20 @@ router.route('/edit_programs')
 // 全てのプログラム一覧を取得 (GET http://localhost:8080/api/edit_programs)
     .get(function(req, res) {
 
-        EditProgram.find().populate('supports').exec(function(err, edit_program) {
-            if (err)
-                res.send(err);
-            res.json(edit_program);
-        });
+        if(req.query.name != null && req.query.type != null && req.query.source != null){
+            EditProgram.findOne({name: req.query.name, type: req.query.type, source: req.query.source}).populate('supports').exec(function(err, edit_program) {
+                if (err)
+                    res.send(err);
+                res.json(edit_program);
+            });
+        }
+        else{
+            EditProgram.find().populate('supports').exec(function(err, edit_program) {
+                if (err)
+                    res.send(err);
+                res.json(edit_program);
+            });
+        }
     });
 
 // /edit_programs/:edit_program_id というルートを作成する．
