@@ -452,6 +452,14 @@ io.sockets.on('connection', function(socket) {
         io.sockets.emit('source_message', { value: data.value , id: id});
     });
 
+    socket.on('os_message', function(data,id) {
+        console.log("os_message");
+        io.sockets.emit('os_message', { value: data.value , id: id});
+    });
+    socket.on('browser_message', function(data,id) {
+        console.log("browser_message");
+        io.sockets.emit('browser_message', { value: data.value , id: id});
+    });
     socket.on('disconnect', function(){
         console.log("disconnect");
     });

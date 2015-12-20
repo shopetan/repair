@@ -4,33 +4,58 @@ socket.on('connect', function(msg) {
     console.log("connet");
 });
 
-socket.on('title_message', function(msg,id) {
+socket.on('title_message', function(msg) {
   console.log("send_title");
   console.log(msg);
     document.getElementById("input_name").innerHTML = msg.value;
 });
-socket.on('type_message', function(msg,id) {
+socket.on('type_message', function(msg) {
   console.log("send_type");
   console.log(msg);
     document.getElementById("input_type").innerHTML = msg.value;
 });
-socket.on('source_message', function(msg,id) {
+socket.on('source_message', function(msg) {
   console.log("send_source");
   console.log(msg);
     document.getElementById("input_source").innerHTML = msg.value;
 });
-function SendTitleMsg(id) {
+socket.on('os_message', function(msg) {
+  console.log("send_os");
+  console.log(msg);
+    document.getElementById("input_os").innerHTML = msg.value;
+});
+socket.on('browser_message', function(msg) {
+  console.log("send_browser");
+  console.log(msg);
+    document.getElementById("input_browser").innerHTML = msg.value;
+});
+
+function SendTitleMsg() {
   var msg = document.getElementById("input_name").value;
-    socket.emit('title_message', { value: msg ,id: id});
+    socket.emit('title_message', { value: msg});
 }
-function SendTypeMsg(id) {
+function SendTypeMsg() {
   var msg = document.getElementById("input_type").value;
-    socket.emit('type_message', { value: msg ,id: id});
+    socket.emit('type_message', { value: msg});
 }
-function SendSourceMsg(id) {
+function SendSourceMsg() {
   var msg = document.getElementById("input_source").value;
-    socket.emit('source_message', { value: msg ,id: id});
+    socket.emit('source_message', { value: msg});
 }
+
+function SendOsMsg() {
+    if(document.getElementById("input_os").value != null){
+        var msg = document.getElementById("input_os").value;
+        socket.emit('os_message', { value: msg});
+    }
+}
+function SendBrowserMsg() {
+    if(document.getElementById("input_browser").value != null){
+        var msg = document.getElementById("input_browser").value;
+        socket.emit('browser_message', { value: msg});
+    }
+}
+
 
 function DisConnect() {
   socket.emit('message', { value: msg });
@@ -40,9 +65,11 @@ function keydown(){
     var name = document.forms.EditProgram.input_name.value;
     var type = document.forms.EditProgram.input_type.value;
     var source = document.forms.EditProgram.input_source.value + ``;
-    SendTitleMsg("name");
-    SendTypeMsg("type");
-    SendSourceMsg("source");
+    SendTitleMsg();
+    SendTypeMsg();
+    SendSourceMsg();
+    SendOsMsg();
+    SendBrowserMsg();
 }
 
 // Draw html
@@ -98,7 +125,6 @@ function DrawSingleEditProgramsHTML(item){
   $("#EditProgram").append(_.template(template)({name:item.name,
                                             type :item.type,
                                             source  :item.source}));
-                                            console.log("なぜだ");
 }
 
 function DrawEditProgramsHTML(item,i){
@@ -425,14 +451,6 @@ function decideAPI(routeAPI,theUrl){
             theUrl = routeAPI + 'edit_programs/' + method[0][1];
             GetSingleEditProgramAPI(theUrl);
         }else{
-            var intro = {};
-            intro.source = "source";
-            intro.type = "type";
-            intro.name = "title";
-            intro.source =  "うーんできたっぽい?↵aaa↵waaaaaaaaaaaaaaaaai";
-            intro.type =  "てすとようの";
-            intro.name = "これは";
-            DrawSingleEditProgramsHTML(intro);
         }
     }else{
     }
