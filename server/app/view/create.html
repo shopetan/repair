@@ -53,29 +53,49 @@
       <div class="android-content mdl-layout__content">
         <a name="top"></a>
         <div class="android-be-together-section mdl-typography--text-center">
-            <div class="android-more-section">
-              <div class="android-section-title mdl-typography--display-1-color-contrast">Edit Program</div>
+          <div class="android-more-section">
+            <div class="android-section-title mdl-typography--display-1-color-contrast">Create Program</div>
 
-              <div class="android-customized-section">
-                <div class="android-customized-section-text">
-                  <div class="mdl-grid">
-                    <form id="EditProgram"></form>
-                    <br><br><br>
+            <div class="android-customized-section">
+              <div class="android-customized-section-text">
+                <div class="mdl-grid">
+                  <form id="EditProgram">
+                  <div class="mdl-card mdl-shadow--3dp ">
+                    <div class="mdl-card__media">
+                    </div>
+                    <div class="mdl-card__title">
+                      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <textarea class="mdl-textfield__input" type="text" rows= "1" id="input_name">タイトル</textarea>
+                        <label class="mdl-textfield__label" for="source">title</label>
+                      </div>
+                    </div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                      <textarea class="mdl-textfield__input" type="text" rows= "1" id="input_type">拡張子</textarea>
+                      <label class="mdl-textfield__label" for="source">type</label>
+                    </div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                      <div class="mdl-textfield mdl-js-textfield">
+                        <textarea class="mdl-textfield__input" type="text" rows= "15" id="input_source">ソースコード</textarea>
+                        <label class="mdl-textfield__label" for="source">edit_program</label>
+                      </div>
+                    </div>
                   </div>
+                  </form>
+                  <br><br><br>
                 </div>
               </div>
-
-              <div class="mdl-grid" id="save_button">
-                <input type="submit" value="Save Program" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="saveProgram(routeAPI,theUrl);">
-              </div>
-
-
-              <!-- Add navbar -->
-              <script>
-                writeFooter();
-              </script>
-
             </div>
+
+            <div id="save_button">
+              <input type="submit" value="Save Program" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="saveProgram(routeAPI,theUrl);">
+            </div>
+
+            <!-- Add navbar -->
+            <script>
+              writeFooter();
+            </script>
+
+          </div>
         </div>
       </div>
     </div>

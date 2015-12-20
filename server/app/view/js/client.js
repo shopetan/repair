@@ -113,7 +113,7 @@ function DrawEditProgramsHTML(item,i){
         '<span class="mdl-typography--font-light mdl-typography--subhead">type:<%- type %></span>',
       '</div>',
       '<div class="mdl-card__actions">',
-        ' <a class="android-link mdl-button mdl-js-button mdl-typography--text-uppercase" href="create.html?editProgramID=<%- _id %>&userID=<%- u_id%>">',
+        ' <a class="android-link mdl-button mdl-js-button mdl-typography--text-uppercase" href="edit.html?editProgramID=<%- _id %>&userID=<%- u_id%>">',
         ' このコードを編集する',
         '   <i class="material-icons">chevron_right</i>',
         ' </a>',
@@ -124,6 +124,16 @@ function DrawEditProgramsHTML(item,i){
                                             type :item.edit_programs[i].type,
                                             _id  :item.edit_programs[i]._id,
                                         u_id :item._id }));
+}
+
+function DrawCreateButtonHTML(item){
+	var template = [
+        '<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"  onclick="location.href=\'./create.html?userID=<%- u_id %>\'">',
+          'Create Programs',
+        '</button>'
+  ].join("");
+
+    $("#createButton").append(_.template(template)({u_id : item._id}));
 }
 
 function DrawSingleUserHTML(item){
@@ -193,6 +203,7 @@ function GetEditProgramAPI(theUrl){
 			for(var i = 0; i < data.edit_programs.length; i++){
 	            DrawEditProgramsHTML(data,i);
 			}
+            DrawCreateButtonHTML(data);
         });
       }
     )
@@ -300,7 +311,7 @@ function saveProgram(routeAPI,theUrl){
     var type = document.forms.EditProgram.input_type.value;
     var source = document.forms.EditProgram.input_source.value + ``;
 
-    if(theUrl.match(/create/) != null){
+    if(theUrl.match(/edit/) != null){
         // urlの?以降(クエリパラメータを取得する)
         if(theUrl.match(reg)){
             var str = theUrl.match(reg)[1];
@@ -317,6 +328,27 @@ function saveProgram(routeAPI,theUrl){
             DeleteUserAPI(DeleteUserUrl);
             GetEditProgramIDUrl = routeAPI + 'edit_programs' + '?name=' + (name+'') + '&type=' + (type+'') + '&source=' + (source+'');
             GetEditProgramIDAPI(GetEditProgramIDUrl,routeAPI);
+            console.log(PostEditProgramUrl);
+            console.log(DeleteUserUrl);
+            console.log(GetEditProgramIDUrl);
+        }
+    }
+    else if(theUrl.match(/create/) != null){
+        // urlの?以降(クエリパラメータを取得する)
+        if(theUrl.match(reg)){
+            var str = theUrl.match(reg)[1];
+            var query = str.split("&");
+            var method = []
+            for (var i = 0;i < query.length;i++){
+                method[i] = query[i].split("=");
+            }
+            PostEditProgramUrl = routeAPI + 'edit_programs' + '?userID=' + method[0][1];
+            PostEditProgramAPI(PostEditProgramUrl,name,type,source);
+            DeleteUserUrl = routeAPI + 'users/' + method[0][1];
+            DeleteUserAPI(DeleteUserUrl);
+            GetEditProgramIDUrl = routeAPI + 'edit_programs' + '?name=' + (name+'') + '&type=' + (type+'') + '&source=' + (source+'');
+            GetEditProgramIDAPI(GetEditProgramIDUrl,routeAPI);
+            console.log(DeleteEditProgramUrl);
             console.log(PostEditProgramUrl);
             console.log(DeleteUserUrl);
             console.log(GetEditProgramIDUrl);
@@ -356,7 +388,7 @@ function decideAPI(routeAPI,theUrl){
 		}
 	}
     //Use GetSingleEditProgramAPI
-    else if(theUrl.match(/create/) != null){
+    else if(theUrl.match(/edit/) != null){
         // urlの?以降(クエリパラメータを取得する)
         if(theUrl.match(reg)){
             var str = theUrl.match(reg)[1];
