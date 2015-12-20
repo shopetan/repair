@@ -110,7 +110,7 @@ function DrawSingleEditProgramsHTML(item){
       '</div>',
      ' </div>',
       '<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">',
-      '<textarea class="mdl-textfield__input" type="text" rows= "1" id="input_type"><%- name %></textarea>',
+      '<textarea class="mdl-textfield__input" type="text" rows= "1" id="input_type"><%- type %></textarea>',
       '<label class="mdl-textfield__label" for="source">type</label>',
       '</div>',
       '<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">',
@@ -126,7 +126,6 @@ function DrawSingleEditProgramsHTML(item){
       '</div>',
       '</div>'
   ].join("");
-  console.log(item);
   $("#EditProgram").append(_.template(template)({name:item.name,
                                             type :item.type,
                                             source  :item.source}));
@@ -154,7 +153,7 @@ function DrawEditProgramsHTML(item,i){
   $("#editPrograms").append(_.template(template)({name:item.edit_programs[i].name,
                                             type :item.edit_programs[i].type,
                                             _id  :item.edit_programs[i]._id,
-                                        u_id :item._id }));
+                                            u_id :item._id}));
 }
 
 function DrawSupportHTML(item){
@@ -182,6 +181,10 @@ function DrawSupportHTML(item){
         }
     }
 
+    $("#support").click(function () {
+        $(this).hide();
+        return false;
+    });
     $("#disp").append(_.template(template)({os      : item[0].os,
                                             browser :item[0].browser }));
 
@@ -329,6 +332,7 @@ function GetEditProgramAPI(theUrl){
 }
 
 function GetEditProgramIDAPI(theUrl,routeAPI){
+    console.log(theUrl);
     fetch(theUrl)
       .then(
         function(response) {
@@ -436,11 +440,25 @@ function saveProgram(routeAPI,theUrl){
             for (var i = 0;i < query.length;i++){
                 method[i] = query[i].split("=");
             }
+            //DeleteSupportUrl = routeAPI + 'supports/' + method[0][1];
+            //PostSupportUrl = routeAPI + 'supports' + '?editProgramID=' + method[0][1];
+            //PostSupportAPI(PostEditProgramUrl,os,browser);
+
             DeleteEditProgramUrl = routeAPI + 'edit_programs/' + method[0][1];
             PostEditProgramUrl = routeAPI + 'edit_programs' + '?userID=' + method[1][1];
             DeleteUserUrl = routeAPI + 'users/' + method[1][1];
-            GetEditProgramIDUrl = routeAPI + 'edit_programs' + '?name=' + (name+'') + '&type=' + (type+'') + '&source=' + (source+'');
+            name = name.replace(/\n+$/g,'');
+            type = type.replace(/\n+$/g,'');
+            source = source.replace(/\n+$/g,'');
+            source = source.replace(/\n+/g,'');
+            url_name = '?name=' + (name);
+            url_type = '&type=' + (type);
+            url_source = '&source=' + (source);
+            console.log("test");
+            console.log(name,type,source);
+            GetEditProgramIDUrl = routeAPI + 'edit_programs' + url_name + url_type + url_source;
 
+            console.log(GetEditProgramIDUrl);
             DeleteEditProgramAPI(DeleteEditProgramUrl);
             PostEditProgramAPI(PostEditProgramUrl,name,type,source);
             DeleteUserAPI(DeleteUserUrl);
@@ -466,9 +484,6 @@ function saveProgram(routeAPI,theUrl){
             DeleteUserAPI(DeleteUserUrl);
             GetEditProgramIDAPI(GetEditProgramIDUrl,routeAPI);
 
-            console.log(PostEditProgramUrl);
-            console.log(DeleteUserUrl);
-            console.log(GetEditProgramIDUrl);
         }
     }
 
