@@ -4,19 +4,45 @@ socket.on('connect', function(msg) {
     console.log("connet");
 });
 
-socket.on('message', function(msg) {
-  console.log("send");
-    document.getElementById("receiveMsg").innerHTML = msg.value;
+socket.on('title_message', function(msg,id) {
+  console.log("send_title");
+  console.log(msg);
+    document.getElementById("input_name").innerHTML = msg.value;
 });
-
-function SendMsg() {
-  var msg = document.getElementById("message").value;
-    socket.emit('message', { value: msg });
-  }
+socket.on('type_message', function(msg,id) {
+  console.log("send_type");
+  console.log(msg);
+    document.getElementById("input_type").innerHTML = msg.value;
+});
+socket.on('source_message', function(msg,id) {
+  console.log("send_source");
+  console.log(msg);
+    document.getElementById("input_source").innerHTML = msg.value;
+});
+function SendTitleMsg(id) {
+  var msg = document.getElementById("input_name").value;
+    socket.emit('title_message', { value: msg ,id: id});
+}
+function SendTypeMsg(id) {
+  var msg = document.getElementById("input_type").value;
+    socket.emit('type_message', { value: msg ,id: id});
+}
+function SendSourceMsg(id) {
+  var msg = document.getElementById("input_source").value;
+    socket.emit('source_message', { value: msg ,id: id});
+}
 
 function DisConnect() {
   socket.emit('message', { value: msg });
   socket.disconnect();
+}
+function keydown(){
+    var name = document.forms.EditProgram.input_name.value;
+    var type = document.forms.EditProgram.input_type.value;
+    var source = document.forms.EditProgram.input_source.value + ``;
+    SendTitleMsg("name");
+    SendTypeMsg("type");
+    SendSourceMsg("source");
 }
 
 // Draw html
@@ -47,22 +73,22 @@ function DrawUsersHTML(item){
 
 function DrawSingleEditProgramsHTML(item){
   var template = [
-    '<div class="mdl-card mdl-shadow--3dp">',
+    '<div class="mdl-card mdl-shadow--3dp ">',
       '<div class="mdl-card__media">',
       '</div>',
       '<div class="mdl-card__title">',
       '<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">',
-      '<input class="mdl-textfield__input" type="text" id="name" value="<%- name %>">',
-      '<label class="mdl-textfield__label" for="name">Title</label>',
+      '<textarea class="mdl-textfield__input" type="text" rows= "1" id="input_name"><%- name %></textarea>',
+      '<label class="mdl-textfield__label" for="source">title</label>',
       '</div>',
      ' </div>',
       '<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">',
-      '<input class="mdl-textfield__input" type="text" id="type" value="<%- type %>">',
-      '<label class="mdl-textfield__label" for="type">type</label>',
+      '<textarea class="mdl-textfield__input" type="text" rows= "1" id="input_type"><%- name %></textarea>',
+      '<label class="mdl-textfield__label" for="source">type</label>',
       '</div>',
       '<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">',
         '<div class="mdl-textfield mdl-js-textfield">',
-          '<textarea class="mdl-textfield__input" type="text" rows= "15" id="source"><%- source %></textarea>',
+          '<textarea class="mdl-textfield__input" type="text" rows= "15" id="input_source"><%- source %></textarea>',
           '<label class="mdl-textfield__label" for="source">edit_program</label>',
         '</div>',
       '</div>',
@@ -107,17 +133,6 @@ function DrawSingleUserHTML(item){
 
     $("#user").append(_.template(template)({name : item.name}));
 }
-
-function DrawSaveButon(item){
-    var template = [
-        '<div class="mdl-cell mdl-cell--6-col">',
-          '<input type="submit" value="Save Program" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="(function(){var user=<%- user_id %>;saveProgram(user);})();">',
-          '</button>',
-        '</div>'
-    ].join("");
-    $("#save_button").append(_.template(template)({user_id : item}));
-}
-
 
 //HTTP Request
 
@@ -281,9 +296,9 @@ function DeleteEditProgramAPI(theUrl){
 
 function saveProgram(routeAPI,theUrl){
     var reg = new RegExp("\\?(.+?)$");
-    var name = document.forms.EditProgram.name.value;
-    var type = document.forms.EditProgram.type.value;
-    var source = document.forms.EditProgram.source.value + ``;
+    var name = document.forms.EditProgram.input_name.value;
+    var type = document.forms.EditProgram.input_type.value;
+    var source = document.forms.EditProgram.input_source.value + ``;
 
     if(theUrl.match(/create/) != null){
         // urlの?以降(クエリパラメータを取得する)
