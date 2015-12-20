@@ -438,9 +438,18 @@ console.log("listen on port(view)8080");
 
 io.sockets.on('connection', function(socket) {
     console.log("connection");
-    socket.on('message', function(data) {
-        console.log("message");
-        io.sockets.emit('message', { value: data.value });
+
+    socket.on('title_message', function(data,id) {
+        console.log("title_message");
+        io.sockets.emit('title_message', { value: data.value , id: id});
+    });
+    socket.on('type_message', function(data,id) {
+        console.log("type_message");
+        io.sockets.emit('type_message', { value: data.value , id: id});
+    });
+    socket.on('source_message', function(data,id) {
+        console.log("source_message");
+        io.sockets.emit('source_message', { value: data.value , id: id});
     });
 
     socket.on('disconnect', function(){
