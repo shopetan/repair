@@ -108,6 +108,20 @@ router.route('/users')
                 }
             });
         }
+        else if(req.query.name != null && req.query.type != null && req.query.source != null){
+            console.log(req.query.name);
+            console.log(req.query.type);
+            console.log(req.query.source);
+            User.find({'edit_programs.name': req.query.name, 'edit_programs.type': req.query.type, 'edit_programs.source': req.query.source}).populate('edit_programs').exec(function(err, users) {
+                if (err)
+                    res.send(err);
+                res.header(
+                    'Access-Control-Allow-Origin','*'
+                );
+                res.json(users);
+            });
+
+        }
         else if(req.query.userName != null){
             User.find({name: req.query.userName}).populate('edit_programs').exec(function(err, users) {
                 if (err)
@@ -202,6 +216,7 @@ router.route('/edit_programs')
                     new_user.edit_programs[i] = user.edit_programs[i];
                 }
                 new_user.edit_programs[new_user.edit_programs.length] = edit_program;
+                console.log(new_user);
 
                 new_user.save(function(err) {
                     if (err)
@@ -220,11 +235,20 @@ router.route('/edit_programs')
 // 全てのプログラム一覧を取得 (GET http://localhost:8080/api/edit_programs)
     .get(function(req, res) {
 
-        EditProgram.find().populate('supports').exec(function(err, edit_program) {
-            if (err)
-                res.send(err);
-            res.json(edit_program);
-        });
+        if(req.query.name != null && req.query.type != null && req.query.source != null){
+            EditProgram.findOne({name: req.query.name, type: req.query.type, source: req.query.source}).populate('supports').exec(function(err, edit_program) {
+                if (err)
+                    res.send(err);
+                res.json(edit_program);
+            });
+        }
+        else{
+            EditProgram.find().populate('supports').exec(function(err, edit_program) {
+                if (err)
+                    res.send(err);
+                res.json(edit_program);
+            });
+        }
     });
 
 // /edit_programs/:edit_program_id というルートを作成する．
@@ -414,11 +438,28 @@ console.log("listen on port(view)8080");
 
 io.sockets.on('connection', function(socket) {
     console.log("connection");
-    socket.on('message', function(data) {
-        console.log("message");
-        io.sockets.emit('message', { value: data.value });
+
+    socket.on('title_message', function(data,id) {
+        console.log("title_message");
+        io.sockets.emit('title_message', { value: data.value , id: id});
+    });
+    socket.on('type_message', function(data,id) {
+        console.log("type_message");
+        io.sockets.emit('type_message', { value: data.value , id: id});
+    });
+    socket.on('source_message', function(data,id) {
+        console.log("source_message");
+        io.sockets.emit('source_message', { value: data.value , id: id});
     });
 
+    socket.on('os_message', function(data,id) {
+        console.log("os_message");
+        io.sockets.emit('os_message', { value: data.value , id: id});
+    });
+    socket.on('browser_message', function(data,id) {
+        console.log("browser_message");
+        io.sockets.emit('browser_message', { value: data.value , id: id});
+    });
     socket.on('disconnect', function(){
         console.log("disconnect");
     });
