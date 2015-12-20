@@ -157,7 +157,39 @@ function DrawEditProgramsHTML(item,i){
                                         u_id :item._id }));
 }
 
+function DrawSupportHTML(item){
+
+    var template = [
+        '<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">',
+          '<div class="mdl-textfield mdl-js-textfield">',
+            '<textarea class="mdl-textfield__input" type="text" rows= "1" id="input_os"><%- os %></textarea>',
+          '</div>',
+        '</div>',
+        '<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">',
+          '<div class="mdl-textfield mdl-js-textfield">',
+            '<textarea class="mdl-textfield__input" type="text" rows= "1" id="input_browser"><%- browser %></textarea>',
+          '</div>',
+        '</div>'
+    ].join("");
+
+    if(item[0] == null){
+        item[0] = {}
+        if(item[0].os == null){
+            item[0].os = "OS";
+        }
+        if(item[0].browser == null){
+            item[0].browser = "ブラウザ";
+        }
+    }
+
+    $("#disp").append(_.template(template)({os      : item[0].os,
+                                            browser :item[0].browser }));
+
+}
+
+
 function display(num,edit){
+    console.log(num,edit);
     if (num == true && edit == false){
         var template = [
         '<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">',
@@ -178,19 +210,34 @@ function display(num,edit){
               return false;
           });
     }else if(num == true && edit == true){
-        var template = [
-        '<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">',
-          '<div class="mdl-textfield mdl-js-textfield">',
-            '<textarea class="mdl-textfield__input" type="text" rows= "1" id="input_os">OS</textarea>',
-          '</div>',
-        '</div>',
-        '<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">',
-          '<div class="mdl-textfield mdl-js-textfield">',
-            '<textarea class="mdl-textfield__input" type="text" rows= "1" id="input_browser">ブラウザ</textarea>',
-          '</div>',
-        '</div>'
-    ].join("");
 
+        var reg = new RegExp("\\?(.+?)$");
+        var theUrl = window.location.href;
+        routeAPI = 'http://localhost:3000/api/';
+        var str = theUrl.match(reg)[1];
+        var query = str.split("&");
+        var method = []
+        for (var i = 0;i < query.length;i++){
+            method[i] = query[i].split("=");
+        }
+        GetEditProgramIDUrl = routeAPI + 'edit_programs/' + method[0][1];
+        fetch(GetEditProgramIDUrl)
+          .then(
+            function(response) {
+              if (response.status !== 200) {
+                console.log('Looks like there was a problem. Status Code: ' +
+                  response.status);
+                return;
+              }
+              // Examine the text in the response
+              response.json().then(function(data) {
+                  DrawSupportHTML(data.supports);
+              });
+            }
+          )
+          .catch(function(err) {
+            console.log('Fetch Error :-S', err);
+          });
     }
 }
 
