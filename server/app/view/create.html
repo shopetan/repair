@@ -16,7 +16,7 @@
 <script type="text/javascript">
   var routeAPI = "http://localhost:3000/api/";
   var theUrl = getURL(window.location.href);
-  var disp = false
+  var disp = false;
   console.log(theUrl);
   decideAPI(routeAPI,theUrl);
 
@@ -80,8 +80,9 @@
                           <label class="mdl-textfield__label" for="source">edit_program</label>
                         </div>
                       </div>
+
                       <div id="support">
-                        <input type="none" value="view Support" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="display(!disp)">
+                        <input type="none" value="view Support" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="display(!disp,null)">
                       </div>
                       <div id="disp">
                       </div>

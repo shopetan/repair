@@ -119,6 +119,11 @@ function DrawSingleEditProgramsHTML(item){
           '<label class="mdl-textfield__label" for="source">edit_program</label>',
         '</div>',
       '</div>',
+      '<div id="support">',
+      '<input type="none" value="view Support" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="display(!disp,true)">',
+      '</div>',
+      '<div id="disp">',
+      '</div>',
       '</div>'
   ].join("");
   console.log(item);
@@ -152,8 +157,8 @@ function DrawEditProgramsHTML(item,i){
                                         u_id :item._id }));
 }
 
-function display(num){
-    if (num == 1){
+function display(num,edit){
+    if (num == true && edit == false){
         var template = [
         '<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">',
           '<div class="mdl-textfield mdl-js-textfield">',
@@ -172,6 +177,20 @@ function display(num){
               $(this).hide();
               return false;
           });
+    }else if(num == true && edit == true){
+        var template = [
+        '<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">',
+          '<div class="mdl-textfield mdl-js-textfield">',
+            '<textarea class="mdl-textfield__input" type="text" rows= "1" id="input_os">OS</textarea>',
+          '</div>',
+        '</div>',
+        '<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">',
+          '<div class="mdl-textfield mdl-js-textfield">',
+            '<textarea class="mdl-textfield__input" type="text" rows= "1" id="input_browser">ブラウザ</textarea>',
+          '</div>',
+        '</div>'
+    ].join("");
+
     }
 }
 
