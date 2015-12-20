@@ -126,6 +126,30 @@ function DrawEditProgramsHTML(item,i){
                                         u_id :item._id }));
 }
 
+function display(num){
+    if (num == 1){
+        var template = [
+        '<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">',
+          '<div class="mdl-textfield mdl-js-textfield">',
+            '<textarea class="mdl-textfield__input" type="text" rows= "1" id="input_os">OS</textarea>',
+          '</div>',
+        '</div>',
+        '<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">',
+          '<div class="mdl-textfield mdl-js-textfield">',
+            '<textarea class="mdl-textfield__input" type="text" rows= "1" id="input_browser">ブラウザ</textarea>',
+          '</div>',
+        '</div>'
+    ].join("");
+
+        $("#disp").append(_.template(template)());
+        $("#support").click(function () {
+              $(this).hide();
+              return false;
+          });
+    }
+}
+
+
 function DrawCreateButtonHTML(item){
 	var template = [
         '<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"  onclick="location.href=\'./create.html?userID=<%- u_id %>\'">',
@@ -321,16 +345,16 @@ function saveProgram(routeAPI,theUrl){
                 method[i] = query[i].split("=");
             }
             DeleteEditProgramUrl = routeAPI + 'edit_programs/' + method[0][1];
-            DeleteEditProgramAPI(DeleteEditProgramUrl);
             PostEditProgramUrl = routeAPI + 'edit_programs' + '?userID=' + method[1][1];
-            PostEditProgramAPI(PostEditProgramUrl,name,type,source);
             DeleteUserUrl = routeAPI + 'users/' + method[1][1];
-            DeleteUserAPI(DeleteUserUrl);
             GetEditProgramIDUrl = routeAPI + 'edit_programs' + '?name=' + (name+'') + '&type=' + (type+'') + '&source=' + (source+'');
+
+            DeleteEditProgramAPI(DeleteEditProgramUrl);
+            PostEditProgramAPI(PostEditProgramUrl,name,type,source);
+            DeleteUserAPI(DeleteUserUrl);
             GetEditProgramIDAPI(GetEditProgramIDUrl,routeAPI);
-            console.log(PostEditProgramUrl);
-            console.log(DeleteUserUrl);
-            console.log(GetEditProgramIDUrl);
+
+
         }
     }
     else if(theUrl.match(/create/) != null){
@@ -343,12 +367,13 @@ function saveProgram(routeAPI,theUrl){
                 method[i] = query[i].split("=");
             }
             PostEditProgramUrl = routeAPI + 'edit_programs' + '?userID=' + method[0][1];
-            PostEditProgramAPI(PostEditProgramUrl,name,type,source);
             DeleteUserUrl = routeAPI + 'users/' + method[0][1];
-            DeleteUserAPI(DeleteUserUrl);
             GetEditProgramIDUrl = routeAPI + 'edit_programs' + '?name=' + (name+'') + '&type=' + (type+'') + '&source=' + (source+'');
+
+            PostEditProgramAPI(PostEditProgramUrl,name,type,source);
+            DeleteUserAPI(DeleteUserUrl);
             GetEditProgramIDAPI(GetEditProgramIDUrl,routeAPI);
-            console.log(DeleteEditProgramUrl);
+
             console.log(PostEditProgramUrl);
             console.log(DeleteUserUrl);
             console.log(GetEditProgramIDUrl);

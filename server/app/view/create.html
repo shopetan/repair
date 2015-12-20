@@ -16,6 +16,7 @@
 <script type="text/javascript">
   var routeAPI = "http://localhost:3000/api/";
   var theUrl = getURL(window.location.href);
+  var disp = false
   console.log(theUrl);
   decideAPI(routeAPI,theUrl);
 
@@ -60,26 +61,32 @@
               <div class="android-customized-section-text">
                 <div class="mdl-grid">
                   <form id="EditProgram">
-                  <div class="mdl-card mdl-shadow--3dp ">
-                    <div class="mdl-card__media">
-                    </div>
-                    <div class="mdl-card__title">
+                    <div class="mdl-card mdl-shadow--3dp ">
+                      <div class="mdl-card__media">
+                      </div>
+                      <div class="mdl-card__title">
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                          <textarea class="mdl-textfield__input" type="text" rows= "1" id="input_name">タイトル</textarea>
+                          <label class="mdl-textfield__label" for="source">title</label>
+                        </div>
+                      </div>
                       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <textarea class="mdl-textfield__input" type="text" rows= "1" id="input_name">タイトル</textarea>
-                        <label class="mdl-textfield__label" for="source">title</label>
+                        <textarea class="mdl-textfield__input" type="text" rows= "1" id="input_type">拡張子</textarea>
+                        <label class="mdl-textfield__label" for="source">type</label>
+                      </div>
+                      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <div class="mdl-textfield mdl-js-textfield">
+                          <textarea class="mdl-textfield__input" type="text" rows= "15" id="input_source">ソースコード</textarea>
+                          <label class="mdl-textfield__label" for="source">edit_program</label>
+                        </div>
+                      </div>
+                      <div id="support">
+                        <input type="none" value="view Support" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="display(!disp)">
+                      </div>
+                      <div id="disp">
                       </div>
                     </div>
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                      <textarea class="mdl-textfield__input" type="text" rows= "1" id="input_type">拡張子</textarea>
-                      <label class="mdl-textfield__label" for="source">type</label>
-                    </div>
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                      <div class="mdl-textfield mdl-js-textfield">
-                        <textarea class="mdl-textfield__input" type="text" rows= "15" id="input_source">ソースコード</textarea>
-                        <label class="mdl-textfield__label" for="source">edit_program</label>
-                      </div>
-                    </div>
-                  </div>
+
                   </form>
                   <br><br><br>
                 </div>
